@@ -20,17 +20,20 @@
 </template>
 
 <script setup>
+import { useAuthStore } from 'src/stores/auth_store';
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router';
 
 const router = useRouter()
+const store = useAuthStore()
+
 const form = reactive({
   email: '',
   senha: ''
 })
 
-const handleForm = () => {
-  console.log(form)
+const handleForm = async () => {
+  await store.onLogin(form)
   router.push({ name: 'dashboard' })
 }
 
