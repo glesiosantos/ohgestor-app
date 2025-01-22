@@ -1,6 +1,6 @@
 <template>
     <q-page class="flex flex-center q-pa-md">
-    <div class="full-width q-pa-none">
+    <q-card class="full-width q-pa-sm">
       <q-img src="./../../assets/img/oh_gestor.png" style="width: 150px;"/>
       <q-separator class="full-width q-ma-lg"/>
       <q-form @submit.prevent="handleForm" class="q-gutter-y-sm">
@@ -8,13 +8,13 @@
         <q-btn color="primary" type="submit" label="Recuperar acesso" class="full-width"/>
       </q-form>
       <q-btn
-        color="green"
+        color="green-7"
         label="Acessar sistema"
         :to="{ name: 'sign-in'}"
         flat
         class="full-width q-mt-sm"
       />
-    </div>
+    </q-card>
   </q-page>
 </template>
 
