@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="lhh lpr lFf">
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -12,12 +12,33 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          Gestor App
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <q-btn-dropdown label="Usuário Nome" flat>
+          <q-list>
+            <q-item clickable v-close-popup @click="onItemClick">
+                <q-item-section>
+                  <q-item-label>Perfil do usuário</q-item-label>
+                </q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup @click="onItemClick">
+                <q-item-section>
+                  <q-item-label>Sair do Sistema</q-item-label>
+                </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
       </q-toolbar>
     </q-header>
+
+    <q-footer>
+      <q-tabs>
+        <q-route-tab  icon="mail" label="Mails" />
+        <q-route-tab  icon="alarm" label="Alarms" />
+        <q-route-tab  icon="movie" label="Movies" />
+      </q-tabs>
+    </q-footer>
 
     <q-drawer
       v-model="leftDrawerOpen"
