@@ -5,7 +5,7 @@
       <q-separator class="full-width q-ma-lg"/>
       <q-form @submit.prevent="handleForm" class="q-gutter-y-sm">
         <q-input outlined v-model="form.email" label="E-mail" />
-        <q-input outlined v-model="form.senha" label="Senha" />
+        <q-input outlined v-model="form.senha" type="password" label="Senha" />
         <q-btn color="primary" type="submit" label="Acessar plataforma" class="full-width"/>
       </q-form>
       <q-btn
@@ -32,9 +32,11 @@ const form = reactive({
   senha: ''
 })
 
-const handleForm = async () => {
-  await store.onLogin(form)
-  router.push({ name: 'dashboard' })
+const handleForm = () => {
+  store.onLogin(form).then( response => {
+    console.log(response)
+    router.push({ name: 'dashboard'})
+  }).catch(error => console.log('Error ',error))
 }
 
 </script>

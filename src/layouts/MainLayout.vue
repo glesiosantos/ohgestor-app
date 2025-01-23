@@ -70,6 +70,9 @@
 import { ref } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from 'src/stores/auth_store'
+
+const authStore = useAuthStore()
 
 const linksList = [
   {
@@ -87,6 +90,7 @@ function toggleLeftDrawer () {
 }
 
 function logout() {
+  authStore.removeAuth()
   router.replace({ name: 'sign-in'})
 }
 </script>

@@ -4,24 +4,23 @@ import { ref } from "vue";
 
 const AUTH_TOKEN = 'api-token'
 
-
 export const useAuthStore = defineStore('authStore', () => {
 
-  const user = ref({})
+  const auth = ref(null)
 
-  const onLogin = (data) => {
-    api.post('v1/login', data).then(response => {
-
-      if(typeof window.localStorage !== 'undefined' && data) {
-        window.localStorage.setItem(AUTH_TOKEN, JSON.stringify(response.data))
-        user.value = response.data
-      }
-
-    }).catch(error => console.log(error))
+  const onLogin = async (data) => {
+    const response = await api.post('v1/login', data)
+    auth.value = response.data
+    window.localStorage.setItem(AUTH_TOKEN,JSON.stringify(auth.value))
   }
 
-  const onLogout = () => {}
+  const removeAuth = () => {
+    auth.value = null
+    window.localStorage.removeItem(AUTH_TOKEN)
+  }
 
-  return { AUTH_TOKEN, user, onLogout, onLogin }
+  const getAuth = () => !!auth.value
+
+  return { onLogin, auth, getAuth, removeAuth, AUTH_TOKEN }
 
 })
