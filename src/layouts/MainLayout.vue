@@ -15,7 +15,7 @@
           Gestor App
         </q-toolbar-title>
 
-        <q-btn-dropdown label="Usuário Nome" flat>
+        <q-btn-dropdown :label="apelido" flat>
           <q-list>
             <q-item clickable v-close-popup @click="onItemClick">
                 <q-item-section>
@@ -32,7 +32,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-footer>
+    <q-footer class="small-screen-only">
       <q-tabs>
         <q-route-tab  icon="mail" label="Mails" />
         <q-route-tab  icon="alarm" label="Alarms" />
@@ -72,7 +72,9 @@ import EssentialLink from 'components/EssentialLink.vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from 'src/stores/auth_store'
 
-const authStore = useAuthStore()
+const { getAuth, removeAuth } = useAuthStore()
+
+const { apelido } = getAuth
 
 const linksList = [
   {
@@ -90,7 +92,7 @@ function toggleLeftDrawer () {
 }
 
 function logout() {
-  authStore.removeAuth()
+  removeAuth()
   router.replace({ name: 'sign-in'})
 }
 </script>
