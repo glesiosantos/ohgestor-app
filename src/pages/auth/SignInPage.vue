@@ -20,7 +20,8 @@
 </template>
 
 <script setup>
-import { useAuthStore } from 'src/stores/auth_store';
+import { api} from 'boot/axios'
+import { useAuthStore } from 'src/stores/auth_store'
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router';
 
@@ -33,8 +34,8 @@ const form = reactive({
 })
 
 const handleForm = () => {
-  store.onLogin(form).then( response => {
-    console.log(response)
+  api.post('v1/auth/autenticar', form).then( response => {
+    store.setAuth('*** data ',response.data)
     router.push({ name: 'dashboard'})
   }).catch(error => console.log('Error ',error))
 }

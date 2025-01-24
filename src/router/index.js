@@ -3,12 +3,10 @@ import { createRouter, createMemoryHistory, createWebHistory, createWebHashHisto
 import routes from './routes'
 import { useAuthStore } from 'src/stores/auth_store'
 
-
 export default defineRouter(function (/* { store, ssrContext } */) {
-
   const store = useAuthStore()
 
-  const createHistory = process.env.SERVER
+   const createHistory = process.env.SERVER
     ? createMemoryHistory
     : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory)
 
@@ -22,16 +20,12 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE)
   })
 
-  Router.beforeEach((to, from, next) => {
-
-    const auth = store.getAuth
-
-    if(to.matched.some(route => route.meta.requiresAuth) && !auth) {
-      next({name: 'sign-in', query: { to: to.fullPath }})
-    } else {
-      next()
+  Router.beforeEach((to) => {
+    if(to.meta.auth){
+      if(store.checkToken()) {
+        console.log(store.auth.token)
+      }
     }
-
   })
 
   return Router
