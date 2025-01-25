@@ -25,6 +25,7 @@ export default defineRouter(function (/* { store, ssrContext } */) {
       console.log('***** is auth?', store.isAuth)
       store.isAuth ? next() : next({name: 'sign-in'})
     } else {
+      console.log('***** ', store.isAuth)
       next()
     }
   })

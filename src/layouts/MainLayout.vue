@@ -34,9 +34,10 @@
 
     <q-footer class="small-screen-only">
       <q-tabs>
-        <q-route-tab  icon="mail" label="Mails" />
-        <q-route-tab  icon="alarm" label="Alarms" />
-        <q-route-tab  icon="movie" label="Movies" />
+        <q-route-tab exact replace icon="dashboard" label="Dashboard" :to="{name: 'dashboard'}" />
+        <q-route-tab exact replace icon="point_of_sale" label="Vender" :to="{name: 'vender-modulo'}" />
+        <q-route-tab exact replace icon="payments" label="Vendas" :to="{name: 'minhas-vendas'}"/>
+        <q-route-tab exact replace icon="manage_accounts" label="Meu Perfil" :to="{name: 'profile'}"/>
       </q-tabs>
     </q-footer>
 
@@ -92,6 +93,11 @@ const linksList = [
     title: 'Dashboard',
     icon: 'dashboard',
     route: { name: 'dashboard' }
+  },
+  {
+    title: 'Clientes',
+    icon: 'groups',
+    route: { name: 'clientes' }
   }
 ]
 
