@@ -11,7 +11,10 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', name: 'dashboard', component: () => import('src/pages/dashboard/IndexPage.vue') }
-    ]
+    ],
+    meta: {
+      auth: true
+    }
   },
   {
     path: '/:catchAll(.*)*',

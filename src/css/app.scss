@@ -1,1 +1,24 @@
 // app global css in SCSS form
+.auth-background {
+    background-image: url('../assets/img/background_oh_gestor.png');
+    background-size: cover;
+    background-position: center center
+}
+
+.small-screen-only {
+    @media (max-width:$breakpoint-xs-max) {
+        display: block;
+    }
+    @media (min-width:$breakpoint-sm-min){
+        display: none;
+    } 
+}
+
+.large-screen-only {
+    @media (max-width:$breakpoint-xs-max) {
+        display: none;
+    }
+    @media (min-width:$breakpoint-sm-min){
+        display: block
+    } 
+}
