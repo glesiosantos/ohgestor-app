@@ -10,9 +10,17 @@
 </template>
 
 <script setup>
+// import { useAuthStore } from 'src/stores/auth_store'
+// import { useRouter } from 'vue-router'
+
+//   const router = useRouter()
+//   const store = useAuthStore()
+
+//   if(store.auth.token) {
+//     router.push({name: 'dashboard'})
+//   }else {
+//     router.push({name: 'sign-in'})
+//   }
 
 </script>
 
-<style scoped>
-
-</style>

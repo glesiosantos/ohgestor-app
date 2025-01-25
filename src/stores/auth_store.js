@@ -17,10 +17,10 @@ export const useAuthStore = defineStore('authStore', () => {
       const bearerToken = `Bearer ${auth.value.token}`
       const { data } = await api.get('v1/auth/validar-token', {
         headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin' : '*',
-          Authorization: bearerToken
-        }
+            "Content-Type": "application/json",
+            Authorization: bearerToken
+          },
+          withCredentials: true
       })
       return data
     }catch(error) { console.log(error.response.data)}

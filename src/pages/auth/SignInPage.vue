@@ -28,16 +28,20 @@ import { useRouter } from 'vue-router';
 const router = useRouter()
 const store = useAuthStore()
 
-const form = reactive({
+let form = reactive({
   email: '',
   senha: ''
 })
 
 const handleForm = () => {
   api.post('v1/auth/autenticar', form).then( response => {
-    store.setAuth('*** data ',response.data)
+    store.setAuth(response.data)
+    form = {
+      email: '',
+      senha: ''
+    }
     router.push({ name: 'dashboard'})
-  }).catch(error => console.log('Error ',error))
+  }).catch(error => console.log('***** Error ',error))
 }
 
 </script>
