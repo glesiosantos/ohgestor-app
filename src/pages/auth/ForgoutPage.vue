@@ -4,7 +4,12 @@
       <q-img src="./../../assets/img/oh_gestor.png" style="width: 150px;"/>
       <q-separator class="full-width q-ma-lg"/>
       <q-form @submit.prevent="handleForm" class="q-gutter-y-sm">
-        <q-input outlined v-model="form.email" label="E-mail" />
+        <q-input
+          outlined v-model="form.email"
+          type="email"
+          label="E-mail"
+          lazy-rules
+          :rules="[val => (val && val.length > 0) || 'E-mail é campo obrigatório']" />
         <q-btn color="primary" type="submit" label="Recuperar acesso" class="full-width"/>
       </q-form>
       <q-btn
@@ -13,6 +18,7 @@
         :to="{ name: 'sign-in'}"
         flat
         class="full-width q-mt-sm"
+
       />
     </q-card>
   </q-page>
