@@ -22,11 +22,9 @@ export const useAuthStore = defineStore('authStore', () => {
   const checkToken = async ()  => {
     try {
       const bearerToken = `Bearer ${auth.value.token}`
-      const { data } = await api.get('v1/auth/validar-token', {
-        headers: {
-            Authorization: bearerToken
-          },
-      })
+      const { data } = await api.get('v1/auth/validar-token', {headers: {
+        Authorization: bearerToken
+      }})
       return data
     }catch(error) {
       removeAuth()
