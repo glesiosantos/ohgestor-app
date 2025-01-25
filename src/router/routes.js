@@ -10,7 +10,8 @@ const routes = [
     path: '',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', name: 'dashboard', component: () => import('src/pages/dashboard/IndexPage.vue') }
+      { path: '', name: 'dashboard', component: () => import('src/pages/dashboard/IndexPage.vue') },
+      { path: '/profile', name: 'profile', component: () => import('src/pages/profile/PerfilPage.vue') },
     ],
     meta: {
       auth: true

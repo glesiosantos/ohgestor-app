@@ -41,7 +41,10 @@ const handleForm = () => {
       senha: ''
     }
     router.push({ name: 'dashboard'})
-  }).catch(error => console.log('***** Error ',error))
+  }).catch(error => {
+    router.push({ name: 'sign-in'})
+    console.log('***** Error ',error)
+  })
 }
 
 </script>

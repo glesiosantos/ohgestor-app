@@ -17,7 +17,7 @@
 
         <q-btn-dropdown :label="user.apelido" flat>
           <q-list>
-            <q-item clickable v-close-popup @click="onItemClick">
+            <q-item clickable v-close-popup @click="router.push({ name: 'profile'})">
                 <q-item-section>
                   <q-item-label>Perfil do usuário</q-item-label>
                 </q-item-section>
