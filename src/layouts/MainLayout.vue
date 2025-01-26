@@ -70,6 +70,7 @@
             />
           </q-list>
       </q-scroll-area>
+
     </q-drawer>
 
     <q-page-container>

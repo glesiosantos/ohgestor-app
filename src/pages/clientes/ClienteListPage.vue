@@ -8,13 +8,13 @@
       :filter="filter"
     >
       <template v-slot:top>
-        <q-btn color="primary" label="Adicionar Cliente" @click="formCliente" />
-        <q-space />
-        <q-input outlined color="primary" v-model="filter">
+        <q-input outlined color="primary" v-model="filter" class="col-4" :class="{'full-width': $q.screen.xs}">
           <template v-slot:append>
             <q-icon name="search" />
           </template>
         </q-input>
+        <q-space />
+        <q-btn color="primary" label="Adicionar Cliente" @click="formCliente" :class="{'full-width q-mt-sm': $q.screen.xs}"/>
       </template>
 
       <template v-slot:body-cell-contatos="props">
@@ -55,19 +55,27 @@ const columns = [
     label: 'CPF/CNPJ',
     field: row => row.cpfCnpj,
     format: val => `${val}`,
-    sortable: true
+    align: 'center'
   },
   {
     label: 'Razão',
     field: row => row.razaoSocial,
     format: val => `${val}`,
-    sortable: true
+    sortable: true,
+    align: 'center'
    },
-  { label: 'Nome Fantasia', field: 'nomeFantasia', sortable: true },
-  { label: 'Proprietário', field: 'proprietario' },
+  {
+    label: 'Nome Fantasia',
+    align: 'center',
+    field: row => row.nomeFantasia,
+    format: val => `${val}`,
+   },
+  { label: 'Proprietário', field: 'proprietario', align: 'center' },
+  { label: 'Segmento Comercial', field: 'segmento', align: 'center' },
+  { label: 'Integrado', field: 'integrado', align: 'center' },
   { label: 'Vencimento', field: 'dataVencimento', align: 'center' },
   { label: 'Contato', field: 'contatos', name: 'contatos', align: 'center' },
-  { label: 'Modulos', field: 'modulos', name: 'modulos'},
+  { label: 'Modulos', field: 'modulos', name: 'modulos', align: 'center'},
   { label: 'Ações', field: 'actions', name: 'actions', align: 'center'}
 ]
 
