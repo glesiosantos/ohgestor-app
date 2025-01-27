@@ -27,11 +27,11 @@
 
 <script setup>
 import { clienteService } from 'src/services/cliente_service';
-// import { useClienteStore } from 'src/stores/cliente_store'
+import { useClienteStore } from 'src/stores/cliente_store'
 import { onMounted, reactive, ref } from 'vue'
 
 const {carregarClientes} = clienteService()
-// const clienteStore = useClienteStore()
+const clienteStore = useClienteStore()
 
 const clientes = ref([])
 
@@ -39,15 +39,10 @@ const formVenda = reactive({
   cliente: ''
 })
 
-const filtrarClientes = (val, update, abort) => {
-  if(val.length < 2) {
-    abort()
-    return
-  }
-
+const filtrarClientes = (val, update) => {
   update(() => {
-    console.log('**** **** **** ', val.razaoSocial)
-    // clientes.value = clienteStore.clientes.filter(v => console.log('*** *** **', v.razaoSocial.toLowerCase()))
+    const index = val.toLowerCase()
+    clientes.value = clienteStore.clientes.filter(v => v.razaoSocial.toLowerCase().indexOf(index) > -1)
   })
 }
 
