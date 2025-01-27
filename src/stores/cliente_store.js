@@ -5,5 +5,7 @@ export const useClienteStore = defineStore('clienteStore', () => {
 
   const clientes = ref([])
 
-  return { clientes }
+  const carregarClientes = (data) => clientes.value = data
+
+  return { clientes, carregarClientes }
 })

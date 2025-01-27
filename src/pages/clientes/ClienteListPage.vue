@@ -41,10 +41,10 @@
 </template>
 
 <script setup>
-import { api } from 'src/boot/axios';
-import { useAuthStore } from 'src/stores/auth_store';
+import { api } from 'src/boot/axios'
+import { useAuthStore } from 'src/stores/auth_store'
 import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
 const router = useRouter()

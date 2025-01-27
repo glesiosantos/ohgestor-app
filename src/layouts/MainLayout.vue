@@ -99,6 +99,11 @@ const linksList = [
     title: 'Clientes',
     icon: 'groups',
     route: { name: 'clientes' }
+  },
+  {
+    title: 'Vendas',
+    icon: 'point_of_sale',
+    route: { name: 'vender-modulo' }
   }
 ]
 
