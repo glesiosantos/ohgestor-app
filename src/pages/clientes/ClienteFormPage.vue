@@ -9,9 +9,12 @@
             outlined
             class="col-12 col-md-2"
             type="text"
-            v-model="documento"
-            :mask="documentoInput"
-            label="CPF/CNPJ"
+            label="CPF ou CNPJ"
+            maxlength="14"
+            mask="###############"
+            v-model="formCliente.documento"
+            reverse-fill-mask
+            hint="Somente numeros"
           />
           <q-input
             outlined
@@ -48,6 +51,7 @@
             <q-input
               outlined
               class="col-12 col-md-2"
+              mask="#####-###"
               type="text"
               v-model="formCliente.cep"
               label="CEP"
@@ -92,14 +96,14 @@
               class="col-12 col-md-3"
               type="text"
               label="Latitude"
-              v-model="formCliente.cidade"
+              v-model="formCliente.latitude"
             />
             <q-input
               outlined
               class="col-12 col-md-3"
               type="text"
               label="Longitude"
-              v-model="formCliente.cidade"
+              v-model="formCliente.longitude"
             />
           </div>
         </fieldset>
@@ -112,7 +116,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue'
 
 const estados = ref([
 { sigla: 'AC', nome: 'Acre' },
@@ -173,10 +177,8 @@ const segmentosComerciais = [
   { id: 26, nome: 'Varejo Online' }
 ]
 
-const documento = ref('')
-
 const formCliente = reactive({
-  cpfCnpj: '',
+  documento: '',
   razao: '',
   fantasia: '',
   segmento: '',
@@ -189,11 +191,9 @@ const formCliente = reactive({
   longitude: ''
 })
 
-const documentoInput = computed(() => {
-  const input = documento.value.trim()
-  console.log('*** **** *** ', input)
-  return input.length <= 11 ? '###.###.###-##' : '##.###.###/####-##'})
 
-const handleForm = () => {}
+const handleForm = () => {
+  console.log(formCliente)
+}
 
 </script>

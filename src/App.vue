@@ -3,8 +3,9 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
-import { useAuthStore } from './stores/auth_store';
+import { useRouter } from 'vue-router'
+import { useAuthStore } from './stores/auth_store'
+import { onMounted } from 'vue'
 
 const store = useAuthStore()
 const router = useRouter()
@@ -21,5 +22,7 @@ if(store.isAuth && store.auth) {
     }
   })()
 }
+
+onMounted(() => store.auth)
 
 </script>

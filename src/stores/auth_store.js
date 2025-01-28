@@ -31,7 +31,5 @@ export const useAuthStore = defineStore('authStore', () => {
       console.log(error.response.data)}
   }
 
-
-
   return { auth, setAuth, checkToken, isAuth, removeAuth }
 })
