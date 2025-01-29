@@ -4,45 +4,43 @@
       <q-form @submit.prevent="handleForm">
         <fieldset>
           <legend class="text-caption text-weight-light">Dados da empresa</legend>
-        <div class="row q-col-gutter-sm">
-          <q-input
-            outlined
-            class="col-12 col-md-2"
-            type="text"
-            label="CPF ou CNPJ"
-            maxlength="14"
-            mask="###############"
-            v-model="formCliente.documento"
-            reverse-fill-mask
-            hint="Somente numeros"
-          />
-          <q-input
-            outlined
-            class="col-12 col-md-5"
-            type="text"
-            v-model="formCliente.razao"
-            label="Razão Social"
-          />
-          <q-input
-            outlined
-            v-model="formCliente.fantasia"
-            class="col-12 col-md-5"
-            type="text"
-            label="Nome Fantasia"
-          />
-        </div>
-        <div class="row q-col-gutter-sm q-my-sm">
-          <q-select
-            outlined
-            class="col-12"
-            type="text"
-            label="Segmento"
-            v-model="formCliente.segmento"
-            :options="segmentosComerciais"
-            option-label="nome"
-            option-value="id"
-          />
-        </div>
+          <div class="row q-col-gutter-sm">
+            <q-input
+              outlined
+              class="col-12 col-md-2"
+              type="text"
+              label="CPF ou CNPJ"
+              maxlength="14"
+              mask="###############"
+              v-model="formCliente.documento"
+              reverse-fill-mask
+              hint="Somente numeros"
+            />
+            <q-input
+              outlined
+              class="col-12 col-md-5"
+              type="text"
+              v-model="formCliente.razao"
+              label="Razão Social"
+            />
+            <q-input
+              outlined
+              v-model="formCliente.fantasia"
+              class="col-12 col-md-5"
+              type="text"
+              label="Nome Fantasia"
+            />
+          </div>
+          <div class="row q-col-gutter-sm q-mt-xs">
+            <q-input v-for="(contato, index) in 3" :key="index"
+              outlined
+              class="col-12 col-md-4"
+              type="text"
+              mask="(##) #####.####"
+              v-model="formCliente.contatos[index]"
+              label="Celular"
+            />
+          </div>
         </fieldset>
         <fieldset>
           <legend class="text-caption text-weight-light">Dados do estabelecimento</legend>
@@ -117,6 +115,13 @@
 
 <script setup>
 import { reactive, ref } from 'vue'
+import { clienteService } from 'src/services/cliente_service'
+import useNotify from 'src/composables/UseNotify'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const {notfifyError, notfifySucess} = useNotify()
+const {salvarCliente} = clienteService()
 
 const estados = ref([
 { sigla: 'AC', nome: 'Acre' },
@@ -148,52 +153,44 @@ const estados = ref([
   { sigla: 'TO', nome: 'Tocantins' }
 ])
 
-const segmentosComerciais = [
-  { id: 1, nome: 'Agronegócio' },
-  { id: 2, nome: 'Alimentos e Bebidas' },
-  { id: 3, nome: 'Automóveis e Peças' },
-  { id: 4, nome: 'Construção Civil' },
-  { id: 5, nome: 'Comércio Varejista' },
-  { id: 6, nome: 'Comércio Atacadista' },
-  { id: 7, nome: 'Educação' },
-  { id: 8, nome: 'Eletrônicos e Informática' },
-  { id: 9, nome: 'Energia' },
-  { id: 10, nome: 'Entretenimento e Lazer' },
-  { id: 11, nome: 'Farmácia e Drogarias' },
-  { id: 12, nome: 'Finanças e Seguros' },
-  { id: 13, nome: 'Saúde e Bem-estar' },
-  { id: 14, nome: 'Indústria' },
-  { id: 15, nome: 'Moda e Vestuário' },
-  { id: 16, nome: 'Serviços de TI' },
-  { id: 17, nome: 'Transporte e Logística' },
-  { id: 18, nome: 'Turismo e Viagens' },
-  { id: 19, nome: 'Telecomunicações' },
-  { id: 20, nome: 'Imobiliário' },
-  { id: 21, nome: 'Meio Ambiente' },
-  { id: 22, nome: 'Tecnologia' },
-  { id: 23, nome: 'Comunicação e Marketing' },
-  { id: 24, nome: 'Produtos de Limpeza' },
-  { id: 25, nome: 'Pet Shop' },
-  { id: 26, nome: 'Varejo Online' }
-]
-
-const formCliente = reactive({
+let formCliente = reactive({
   documento: '',
   razao: '',
   fantasia: '',
-  segmento: '',
   cep: '',
   logradouro: '',
   bairro: '',
   cidade: '',
   estado: '',
   latitude: '',
-  longitude: ''
+  longitude: '',
+  contatos: []
 })
 
 
-const handleForm = () => {
-  console.log(formCliente)
+const handleForm = async () => {
+  try {
+    const contatos = formCliente.contatos.filter(Boolean)
+    const data =  Object.assign({}, formCliente, { contatos })
+    await salvarCliente(data)
+    notfifySucess('Cadastro realizado com sucesso')
+    formCliente = {
+      documento: '',
+      razao: '',
+      fantasia: '',
+      cep: '',
+      logradouro: '',
+      bairro: '',
+      cidade: '',
+      estado: '',
+      latitude: '',
+      longitude: '',
+      contatos: []
+    }
+    router.push({name: 'clientes'})
+  } catch (error) {
+    notfifyError(error)
+  }
 }
 
 </script>
