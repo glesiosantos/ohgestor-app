@@ -41,6 +41,20 @@
               label="Celular"
             />
           </div>
+          <div class="row q-col-gutter-sm q-mt-xs">
+            <q-select
+              outlined
+              :options="utilStore.estabelecimentos"
+              option-label="nome"
+              option-value="sigla"
+              class="col-12 col-md-3"
+              type="text"
+              label="Tipo de Comercio"
+              v-model="formCliente.estabelecimento"
+              emit-value
+              map-options
+            />
+          </div>
         </fieldset>
         <fieldset>
           <legend class="text-caption text-weight-light">Dados do estabelecimento</legend>
@@ -79,7 +93,7 @@
             />
             <q-select
               outlined
-              :options="estados"
+              :options="utilStore.estados"
               option-label="nome"
               option-value="sigla"
               class="col-12 col-md-3"
@@ -114,49 +128,25 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { onMounted, reactive } from 'vue'
 import { clienteService } from 'src/services/cliente_service'
 import useNotify from 'src/composables/UseNotify'
 import { useRouter } from 'vue-router'
+import { utilService } from 'src/services/util_service'
+import { useUtilStore } from 'src/stores/util_store'
 
 const router = useRouter()
 const {notfifyError, notfifySucess} = useNotify()
 const {salvarCliente} = clienteService()
+const { carregarEstados, carregarEstabelecimentoComerciais } = utilService()
 
-const estados = ref([
-{ sigla: 'AC', nome: 'Acre' },
-  { sigla: 'AL', nome: 'Alagoas' },
-  { sigla: 'AP', nome: 'Amapá' },
-  { sigla: 'AM', nome: 'Amazonas' },
-  { sigla: 'BA', nome: 'Bahia' },
-  { sigla: 'CE', nome: 'Ceará' },
-  { sigla: 'DF', nome: 'Distrito Federal' },
-  { sigla: 'ES', nome: 'Espírito Santo' },
-  { sigla: 'GO', nome: 'Goiás' },
-  { sigla: 'MA', nome: 'Maranhão' },
-  { sigla: 'MT', nome: 'Mato Grosso' },
-  { sigla: 'MS', nome: 'Mato Grosso do Sul' },
-  { sigla: 'MG', nome: 'Minas Gerais' },
-  { sigla: 'PA', nome: 'Pará' },
-  { sigla: 'PB', nome: 'Paraíba' },
-  { sigla: 'PR', nome: 'Paraná' },
-  { sigla: 'PE', nome: 'Pernambuco' },
-  { sigla: 'PI', nome: 'Piauí' },
-  { sigla: 'RJ', nome: 'Rio de Janeiro' },
-  { sigla: 'RN', nome: 'Rio Grande do Norte' },
-  { sigla: 'RS', nome: 'Rio Grande do Sul' },
-  { sigla: 'RO', nome: 'Rondônia' },
-  { sigla: 'RR', nome: 'Roraima' },
-  { sigla: 'SC', nome: 'Santa Catarina' },
-  { sigla: 'SP', nome: 'São Paulo' },
-  { sigla: 'SE', nome: 'Sergipe' },
-  { sigla: 'TO', nome: 'Tocantins' }
-])
+const utilStore = useUtilStore()
 
 let formCliente = reactive({
   documento: '',
   razao: '',
   fantasia: '',
+  estabelecimento: '',
   cep: '',
   logradouro: '',
   bairro: '',
@@ -192,5 +182,10 @@ const handleForm = async () => {
     notfifyError(error)
   }
 }
+
+onMounted(() => {
+  carregarEstados()
+  carregarEstabelecimentoComerciais()
+})
 
 </script>
