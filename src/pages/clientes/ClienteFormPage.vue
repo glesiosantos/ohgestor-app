@@ -32,7 +32,7 @@
             />
           </div>
           <div class="row q-col-gutter-sm q-mt-xs">
-            <q-input v-for="(contato, index) in 3" :key="index"
+            <q-input v-for="(contato, index) in 2" :key="index"
               outlined
               class="col-12 col-md-4"
               type="text"
@@ -40,14 +40,12 @@
               v-model="formCliente.contatos[index]"
               label="Celular"
             />
-          </div>
-          <div class="row q-col-gutter-sm q-mt-xs">
             <q-select
               outlined
               :options="utilStore.estabelecimentos"
               option-label="nome"
               option-value="sigla"
-              class="col-12 col-md-3"
+              class="col-12 col-md-4"
               type="text"
               label="Tipo de Comercio"
               v-model="formCliente.estabelecimento"
@@ -179,7 +177,7 @@ const handleForm = async () => {
     }
     router.push({name: 'clientes'})
   } catch (error) {
-    notfifyError(error)
+    notfifyError(error.message)
   }
 }
 

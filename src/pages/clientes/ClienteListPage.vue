@@ -1,10 +1,12 @@
 <template>
   <q-page padding>
-    <q-table
+    <q-card>
+      <q-card-section>
+        <q-table
       flat
       bordered
       :columns="columns"
-      :rows="rows"
+      :rows="clienteStore.clientes"
       :filter="filter"
     >
       <template v-slot:top>
@@ -24,6 +26,12 @@
         </q-td>
       </template>
 
+      <template v-slot:body-cell-integrado="props">
+        <q-td :props="props">
+          <q-icon name="circle" :color="props.row.integrado ? 'green-10' : 'red-10'"/>
+        </q-td>
+      </template>
+
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
           <!-- Botões de Editar e Excluir -->
@@ -37,16 +45,20 @@
         </q-td>
       </template>
   </q-table>
+      </q-card-section>
+    </q-card>
   </q-page>
 </template>
 
 <script setup>
-import { api } from 'src/boot/axios'
-import { useAuthStore } from 'src/stores/auth_store'
+import { clienteService } from 'src/services/cliente_service'
+import { useClienteStore } from 'src/stores/cliente_store'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-const authStore = useAuthStore()
+const { carregarClientes } = clienteService()
+
+const clienteStore = useClienteStore()
 const router = useRouter()
 const filter = ref('')
 
@@ -59,35 +71,27 @@ const columns = [
   },
   {
     label: 'Razão',
-    field: row => row.razaoSocial,
+    field: row => row.razao,
     format: val => `${val}`,
     sortable: true,
-    align: 'center'
+    align: 'rigth'
    },
   {
     label: 'Nome Fantasia',
     align: 'center',
-    field: row => row.nomeFantasia,
+    field: row => row.fantasia,
     format: val => `${val}`,
    },
-  { label: 'Proprietário', field: 'proprietario', align: 'center' },
-  { label: 'Segmento Comercial', field: 'segmento', align: 'center' },
-  { label: 'Integrado', field: 'integrado', align: 'center' },
-  { label: 'Vencimento', field: 'dataVencimento', align: 'center' },
-  { label: 'Contato', field: 'contatos', name: 'contatos', align: 'center' },
-  { label: 'Modulos', field: 'modulos', name: 'modulos', align: 'center'},
+  { label: 'Proprietário', field: 'proprietario', align: 'rigth' },
+  { label: 'Estabelecimento', field: row => row.estabelecimento, align: 'rigth' },
+  { label: 'Integrado', field: 'integrado', name: 'integrado', align: 'center' },
+  { label: 'Vencimento', field: 'vencimento', align: 'center' },
+  { label: 'Contato', field: 'contatos', name: 'contatos', align: 'rigth' },
   { label: 'Ações', field: 'actions', name: 'actions', align: 'center'}
 ]
 
-const rows = ref([])
-
 const formCliente = () => router.push({ name: 'cliente-form'})
 
-async function loadCliente () {
-  const response = await api.get('v1/clientes', {headers: {Authorization: authStore.auth.token}})
-  rows.value = response.data
-}
-
-onMounted(() => loadCliente())
+onMounted(() => carregarClientes())
 
 </script>
