@@ -15,6 +15,7 @@
               v-model="formCliente.documento"
               reverse-fill-mask
               hint="Somente numeros"
+              :rules="[val => (val && val.length > 0) || 'Documento é campo obrigatório']"
             />
             <q-input
               outlined
@@ -22,6 +23,7 @@
               type="text"
               v-model="formCliente.razao"
               label="Razão Social"
+              :rules="[val => (val && val.length > 0) || 'Razão Social é campo obrigatório']"
             />
             <q-input
               outlined
@@ -29,6 +31,7 @@
               class="col-12 col-md-5"
               type="text"
               label="Nome Fantasia"
+              :rules="[val => (val && val.length > 0) || 'Nome Fantasia é campo obrigatório']"
             />
           </div>
           <div class="row q-col-gutter-sm q-mt-xs">
@@ -38,7 +41,8 @@
               type="text"
               mask="(##) #####.####"
               v-model="formCliente.contatos[index]"
-              label="Celular"
+              label="Celular Principal"
+              :rules="[val => (val && val.length > 0) || 'Celular Principal é campo obrigatório']"
             />
             <q-select
               outlined
@@ -51,6 +55,7 @@
               v-model="formCliente.estabelecimento"
               emit-value
               map-options
+              :rules="[val => (val && val.length > 0) || 'Tipo de estabelecimento é campo obrigatório']"
             />
           </div>
         </fieldset>
@@ -65,6 +70,7 @@
               type="text"
               v-model="formCliente.cep"
               label="CEP"
+              :rules="[val => (val && val.length > 0) || 'CEP é campo obrigatório']"
             />
             <q-input
               outlined
@@ -72,6 +78,7 @@
               type="text"
               v-model="formCliente.logradouro"
               label="Logradouro"
+              :rules="[val => (val && val.length > 0) || 'Logradouro é campo obrigatório']"
             />
             <q-input
               outlined
@@ -79,6 +86,7 @@
               type="text"
               label="Bairro"
               v-model="formCliente.bairro"
+              :rules="[val => (val && val.length > 0) || 'Bairro é campo obrigatório']"
             />
           </div>
           <div class="row q-col-gutter-sm q-my-sm">
@@ -88,6 +96,7 @@
               type="text"
               label="Cidade"
               v-model="formCliente.cidade"
+              :rules="[val => (val && val.length > 0) || 'Cidade é campo obrigatório']"
             />
             <q-select
               outlined
@@ -100,6 +109,7 @@
               v-model="formCliente.estado"
               emit-value
               map-options
+              :rules="[val => (val && val.length > 0) || 'Estado é campo obrigatório']"
             />
             <q-input
               outlined
