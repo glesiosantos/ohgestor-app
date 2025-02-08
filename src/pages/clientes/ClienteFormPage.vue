@@ -9,21 +9,18 @@
               outlined
               class="col-12 col-md-2"
               type="text"
-              label="CPF ou CNPJ"
+              label="CPF ou CNPJ (Somente números)"
               maxlength="14"
               mask="###############"
               v-model="formCliente.documento"
-              reverse-fill-mask
-              hint="Somente numeros"
-              :rules="[val => (val && val.length > 0) || 'Documento é campo obrigatório']"
             />
             <q-input
               outlined
               class="col-12 col-md-5"
               type="text"
               v-model="formCliente.razao"
-              label="Razão Social"
-              :rules="[val => (val && val.length > 0) || 'Razão Social é campo obrigatório']"
+              :style="{ textTransform: 'uppercase' }"
+              label="Nome / Razão"
             />
             <q-input
               outlined
@@ -31,7 +28,7 @@
               class="col-12 col-md-5"
               type="text"
               label="Nome Fantasia"
-              :rules="[val => (val && val.length > 0) || 'Nome Fantasia é campo obrigatório']"
+              :style="{ textTransform: 'uppercase' }"
             />
           </div>
           <div class="row q-col-gutter-sm q-mt-xs">
@@ -42,7 +39,6 @@
               mask="(##) #####.####"
               v-model="formCliente.contatos[index]"
               label="Celular Principal"
-              :rules="[val => (val && val.length > 0) || 'Celular Principal é campo obrigatório']"
             />
             <q-select
               outlined
@@ -55,7 +51,6 @@
               v-model="formCliente.estabelecimento"
               emit-value
               map-options
-              :rules="[val => (val && val.length > 0) || 'Tipo de estabelecimento é campo obrigatório']"
             />
           </div>
         </fieldset>
@@ -69,62 +64,49 @@
               mask="#####-###"
               type="text"
               v-model="formCliente.cep"
+              @blur="carregarEndereco"
               label="CEP"
-              :rules="[val => (val && val.length > 0) || 'CEP é campo obrigatório']"
             />
             <q-input
               outlined
-              class="col-12 col-md-7"
+              class="col-12 col-md-10"
               type="text"
               v-model="formCliente.logradouro"
               label="Logradouro"
-              :rules="[val => (val && val.length > 0) || 'Logradouro é campo obrigatório']"
             />
-            <q-input
-              outlined
-              class="col-12 col-md-3"
-              type="text"
-              label="Bairro"
-              v-model="formCliente.bairro"
-              :rules="[val => (val && val.length > 0) || 'Bairro é campo obrigatório']"
-            />
+
           </div>
           <div class="row q-col-gutter-sm q-my-sm">
             <q-input
               outlined
-              class="col-12 col-md-3"
+              class="col-12 col-md-4"
+              type="text"
+              label="Bairro"
+              v-model="formCliente.bairro"
+            />
+            <q-input
+              outlined
+              class="col-12 col-md-4"
               type="text"
               label="Cidade"
               v-model="formCliente.cidade"
-              :rules="[val => (val && val.length > 0) || 'Cidade é campo obrigatório']"
             />
             <q-select
               outlined
               :options="utilStore.estados"
               option-label="nome"
               option-value="sigla"
-              class="col-12 col-md-3"
+              class="col-12 col-md-4"
               type="text"
               label="Estado"
               v-model="formCliente.estado"
               emit-value
               map-options
-              :rules="[val => (val && val.length > 0) || 'Estado é campo obrigatório']"
             />
-            <q-input
-              outlined
-              class="col-12 col-md-3"
-              type="text"
-              label="Latitude"
-              v-model="formCliente.latitude"
-            />
-            <q-input
-              outlined
-              class="col-12 col-md-3"
-              type="text"
-              label="Longitude"
-              v-model="formCliente.longitude"
-            />
+
+          </div>
+          <div>
+            <q-checkbox v-model="location" label="Você esta no local do cadastro agora?" @blur="obterLocalizacao" />
           </div>
         </fieldset>
         <div class="flex flex-center q-my-sm">
@@ -136,7 +118,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { clienteService } from 'src/services/cliente_service'
 import useNotify from 'src/composables/UseNotify'
 import { useRouter } from 'vue-router'
@@ -146,9 +128,11 @@ import { useUtilStore } from 'src/stores/util_store'
 const router = useRouter()
 const {notfifyError, notfifySucess} = useNotify()
 const {salvarCliente} = clienteService()
-const { carregarEstados, carregarEstabelecimentoComerciais } = utilService()
+const { carregarEstados, carregarEstabelecimentoComerciais, carregarEnderecoViaCep } = utilService()
 
 const utilStore = useUtilStore()
+
+const location = ref(false)
 
 let formCliente = reactive({
   documento: '',
@@ -171,6 +155,7 @@ const handleForm = async () => {
     const contatos = formCliente.contatos.filter(Boolean)
     const data =  Object.assign({}, formCliente, { contatos })
     await salvarCliente(data)
+
     notfifySucess('Cadastro realizado com sucesso')
     formCliente = {
       documento: '',
@@ -189,6 +174,21 @@ const handleForm = async () => {
   } catch (error) {
     notfifyError(error.message)
   }
+}
+
+const carregarEndereco = async () => {
+  const endereco = await carregarEnderecoViaCep(formCliente.cep)
+  formCliente.logradouro = endereco.logradouro
+  formCliente.bairro = endereco.bairro
+  formCliente.cidade = endereco.localidade
+  formCliente.estado = endereco.uf
+}
+
+const obterLocalizacao = () => {
+  navigator.geolocation.getCurrentPosition(position => {
+    formCliente.latitude = position.coords.latitude
+    formCliente.longitude = position.coords.longitude
+  })
 }
 
 onMounted(() => {

@@ -17,5 +17,11 @@ export const utilService = () => {
     utilStore.popularEstabelecimentoComerciais(response.data)
   }
 
-  return { carregarEstados, carregarEstabelecimentoComerciais }
+  const carregarEnderecoViaCep = async (data) => {
+    const cep = data.replaceAll('-','')
+    const response = await api.get(`https://viacep.com.br/ws/${cep}/json/`)
+    return response.data
+  }
+
+  return { carregarEstados, carregarEstabelecimentoComerciais, carregarEnderecoViaCep }
 }
