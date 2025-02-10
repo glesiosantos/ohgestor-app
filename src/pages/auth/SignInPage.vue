@@ -34,7 +34,7 @@
 
 <script setup>
 import { api} from 'boot/axios'
-import useNotify from 'src/composables/UseNotify';
+import useNotify from 'src/composables/UseNotify'
 import { useAuthStore } from 'src/stores/auth_store'
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router';

@@ -22,7 +22,6 @@ export default defineRouter(function (/* { store, ssrContext } */) {
 
   Router.beforeEach(async(to, from, next) => {
     if(to.meta?.auth){
-      console.log('***** is auth?', store.isAuth)
       store.isAuth ? next() : next({name: 'sign-in'})
     } else {
       next()
