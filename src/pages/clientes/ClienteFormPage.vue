@@ -13,6 +13,8 @@
               maxlength="14"
               mask="###############"
               v-model="formCliente.documento"
+              lazy-rules
+              :rules="[val => (val && val.length > 0) || 'CPF/CNPJ é campo obrigatório']"
             />
             <q-input
               outlined
@@ -21,6 +23,8 @@
               v-model="formCliente.razao"
               :style="{ textTransform: 'uppercase' }"
               label="Nome / Razão"
+              lazy-rules
+              :rules="[val => (val && val.length > 0) || 'Nome/Razão é campo obrigatório']"
             />
             <q-input
               outlined
@@ -29,6 +33,8 @@
               type="text"
               label="Nome Fantasia"
               :style="{ textTransform: 'uppercase' }"
+              lazy-rules
+              :rules="[val => (val && val.length > 0) || 'Nome Fantasia é campo obrigatório']"
             />
           </div>
           <div class="row q-col-gutter-sm q-mt-xs">
@@ -38,7 +44,9 @@
               type="text"
               mask="(##) #####.####"
               v-model="formCliente.contatos[index]"
-              label="Celular Principal"
+              label="Celular"
+              lazy-rules
+              :rules="[val => (val && val.length > 0) || 'CELULAR é campo obrigatório']"
             />
             <q-select
               outlined
@@ -51,6 +59,8 @@
               v-model="formCliente.estabelecimento"
               emit-value
               map-options
+              lazy-rules
+              :rules="[val => (val && val.length > 0) || 'CPF/CNPJ é campo obrigatório']"
             />
           </div>
         </fieldset>
@@ -66,6 +76,8 @@
               v-model="formCliente.cep"
               @blur="carregarEndereco"
               label="CEP"
+              lazy-rules
+              :rules="[val => (val && val.length > 0) || 'CEP é campo obrigatório']"
             />
             <q-input
               outlined
@@ -73,6 +85,8 @@
               type="text"
               v-model="formCliente.logradouro"
               label="Logradouro"
+              lazy-rules
+              :rules="[val => (val && val.length > 0) || 'LOGRADOURO é campo obrigatório']"
             />
 
           </div>
@@ -83,6 +97,8 @@
               type="text"
               label="Bairro"
               v-model="formCliente.bairro"
+              lazy-rules
+              :rules="[val => (val && val.length > 0) || 'BAIRRO é campo obrigatório']"
             />
             <q-input
               outlined
@@ -90,6 +106,8 @@
               type="text"
               label="Cidade"
               v-model="formCliente.cidade"
+              lazy-rules
+              :rules="[val => (val && val.length > 0) || 'CIDADE é campo obrigatório']"
             />
             <q-select
               outlined
@@ -102,6 +120,8 @@
               v-model="formCliente.estado"
               emit-value
               map-options
+              lazy-rules
+              :rules="[val => (val && val.length > 0) || 'ESTADO é campo obrigatório']"
             />
 
           </div>

@@ -22,3 +22,11 @@
         display: block
     } 
 }
+
+.hide-validation .q-field__error {
+    display: none;
+}
+  
+.q-field--error .q-field__error {
+    display: block;
+}
