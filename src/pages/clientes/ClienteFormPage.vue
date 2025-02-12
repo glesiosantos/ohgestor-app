@@ -37,7 +37,7 @@
               :rules="[val => (val && val.length > 0) || 'Nome Fantasia é campo obrigatório']"
             />
           </div>
-          <div class="row q-col-gutter-sm q-mt-xs">
+          <div class="row q-col-gutter-sm">
             <q-input v-for="(contato, index) in 2" :key="index"
               outlined
               class="col-12 col-md-4"
@@ -67,7 +67,7 @@
         <fieldset>
           <legend class="text-caption text-weight-light">Dados do estabelecimento</legend>
 
-          <div class="row q-col-gutter-sm q-my-sm">
+          <div class="row q-col-gutter-sm">
             <q-input
               outlined
               class="col-12 col-md-2"
@@ -90,7 +90,7 @@
             />
 
           </div>
-          <div class="row q-col-gutter-sm q-my-sm">
+          <div class="row q-col-gutter-sm">
             <q-input
               outlined
               class="col-12 col-md-4"
