@@ -4,8 +4,11 @@ import { ref } from "vue";
 export const useClienteStore = defineStore('clienteStore', () => {
 
   const clientes = ref([])
+  const cliente = ref('')
 
   const carregarClientes = (data) => clientes.value = data
 
-  return { clientes, carregarClientes }
+  const carregarClienteViaDocumento = (data) => cliente.value = data
+
+  return { clientes, cliente, carregarClientes, carregarClienteViaDocumento }
 })

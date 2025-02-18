@@ -35,7 +35,6 @@
     <q-footer class="small-screen-only">
       <q-tabs>
         <q-route-tab exact replace icon="dashboard" label="Dashboard" :to="{name: 'dashboard'}" />
-        <q-route-tab exact replace icon="point_of_sale" label="Vender" :to="{name: 'vender-modulo'}" />
         <q-route-tab exact replace icon="payments" label="Vendas" :to="{name: 'minhas-vendas'}"/>
         <q-route-tab exact replace icon="manage_accounts" label="Meu Perfil" :to="{name: 'profile'}"/>
       </q-tabs>
@@ -99,11 +98,6 @@ const linksList = [
     title: 'Clientes',
     icon: 'groups',
     route: { name: 'clientes' }
-  },
-  {
-    title: 'Vendas',
-    icon: 'point_of_sale',
-    route: { name: 'vender-modulo' }
   }
 ]
 
