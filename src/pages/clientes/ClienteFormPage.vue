@@ -44,23 +44,9 @@
               type="text"
               mask="(##) #####.####"
               v-model="formCliente.contatos[index]"
-              label="Celular"
+              label="Whatsapp / Celular"
               lazy-rules
-              :rules="[val => (val && val.length > 0) || 'CELULAR é campo obrigatório']"
-            />
-            <q-select
-              outlined
-              :options="utilStore.estabelecimentos"
-              option-label="nome"
-              option-value="sigla"
-              class="col-12 col-md-4"
-              type="text"
-              label="Tipo de Comercio"
-              v-model="formCliente.estabelecimento"
-              emit-value
-              map-options
-              lazy-rules
-              :rules="[val => (val && val.length > 0) || 'CPF/CNPJ é campo obrigatório']"
+              :rules="[val => (val && val.length > 0) || 'Whatsapp/Celular é campo obrigatório']"
             />
           </div>
         </fieldset>
@@ -158,7 +144,6 @@ let formCliente = reactive({
   documento: '',
   razao: '',
   fantasia: '',
-  estabelecimento: '',
   cep: '',
   logradouro: '',
   bairro: '',
