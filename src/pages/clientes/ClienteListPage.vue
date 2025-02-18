@@ -65,13 +65,13 @@ const filter = ref('')
 const columns = [
   {
     label: 'CPF/CNPJ',
-    field: row => row.cpfCnpj,
+    field: row => row.cpfOuCnpj,
     format: val => `${val}`,
     align: 'center'
   },
   {
     label: 'Razão',
-    field: row => row.razao,
+    field: row => row.razaoSocial,
     format: val => `${val}`,
     sortable: true,
     align: 'rigth'
@@ -79,7 +79,7 @@ const columns = [
   {
     label: 'Nome Fantasia',
     align: 'center',
-    field: row => row.fantasia,
+    field: row => row.nomeFantasia,
     format: val => `${val}`,
    },
   { label: 'Proprietário', field: 'proprietario', align: 'rigth' },

@@ -17,11 +17,21 @@ export const utilService = () => {
     utilStore.popularEstabelecimentoComerciais(response.data)
   }
 
+  const carregarModulos = async () => {
+    const response = await api.get('v1/utils/modulos', {headers: {Authorization: authStore.auth.token}})
+    utilStore.popularModulos(response.data)
+  }
+
+  const carregarVencimentos = async () => {
+    const response = await api.get('v1/utils/vencimentos', {headers: {Authorization: authStore.auth.token}})
+    utilStore.popularVencimentos(response.data)
+  }
+
   const carregarEnderecoViaCep = async (data) => {
     const cep = data.replaceAll('-','')
     const response = await api.get(`https://viacep.com.br/ws/${cep}/json/`)
     return response.data
   }
 
-  return { carregarEstados, carregarEstabelecimentoComerciais, carregarEnderecoViaCep }
+  return { carregarEstados, carregarEstabelecimentoComerciais, carregarModulos, carregarVencimentos, carregarEnderecoViaCep }
 }
