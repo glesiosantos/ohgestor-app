@@ -1,12 +1,12 @@
 <template>
   <q-page padding>
     <q-card class="full-width q-pa-md">
-      <q-form class="q-gutter-y-sm">
+      <q-form class="q-gutter-y-sm" @submit.prevent="handleForm">
       <div class="row">
         <q-select
-          v-model="formVenda.cliente"
+          v-model="formVenda.idEstabelecimento"
           :options="clientes"
-          option-label="razao"
+          option-label="razaoSocial"
           option-value="id"
           label="Buscar Cliente"
           filled
@@ -29,7 +29,7 @@
       <div class="row q-col-gutter-sm q-mt-xs">
         <q-input
           outlined
-          v-model="formVenda.cpfProprietario"
+          v-model="formVenda.cpf"
           label="CPF do Proprietário"
           mask="###.###.###-##"
           class="col-12 col-md-4"
@@ -39,7 +39,7 @@
 
       <q-input
         outlined
-        v-model="formVenda.nomeProprietario"
+        v-model="formVenda.proprietario"
         label="Nome do proprietário"
         class="col-12 col-md-8"
         lazy-rules
@@ -51,15 +51,18 @@
         <q-select
           outlined
           v-model="formVenda.modulo"
-          :options="modulos"
-          option-value=""
-          label="Modulo"
+          :options="utilStore.modulos"
+          option-value="sigla"
+          option-label="descricao"
+          label="Módulo"
           class="col-12 col-md-6"
+          emit-value
+          map-options
           lazy-rules
-          :rules="[val => (val && val.length > 0) || 'CPF é campo obrigatório']"
+          :rules="[val => (val && val.length > 0) || 'MÓDULO é campo obrigatório']"
         />
         <div class="col-12 col-md-6 q-gutter-sm flex justify-between">
-          <q-radio v-model="formVenda.vencimento" v-for="vencimento in vencimentos" :val="vencimento" :label="vencimento.toString()" :key="vencimento" />
+          <q-radio v-model="formVenda.vencimento" v-for="vencimento in utilStore.vencimentos" :val="vencimento.descricao" :label="vencimento.dia.toString()" :key="vencimento.descricao" />
         </div>
 
       </div>
@@ -72,21 +75,29 @@
 </template>
 
 <script setup>
-import { clienteService } from 'src/services/cliente_service';
+import useNotify from 'src/composables/UseNotify'
+import { clienteService } from 'src/services/cliente_service'
+import { utilService } from 'src/services/util_service'
+import { vendaService } from 'src/services/venda_service'
 import { useClienteStore } from 'src/stores/cliente_store'
+import { useUtilStore } from 'src/stores/util_store'
 import { onMounted, reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-const {carregarClientes} = clienteService()
+const {carregarClientes } = clienteService()
+const { carregarModulos, carregarVencimentos } = utilService()
+const { registrarVendaCliente } = vendaService()
 const clienteStore = useClienteStore()
+const utilStore = useUtilStore()
+const router = useRouter()
+const {notfifyError, notfifySucess} = useNotify()
 
 const clientes = ref([])
-const modulos = ref(['Oficina Mecânica'])
-const vencimentos = ref([5,10,15,25])
 
-const formVenda = reactive({
-  estabelecimento: '',
-  cpfProprietario: '',
-  nomeProprietario: '',
+let formVenda = reactive({
+  idEstabelecimento: '',
+  cpf: '',
+  proprietario: '',
   modulo: '',
   vencimento: 0
 })
@@ -94,10 +105,27 @@ const formVenda = reactive({
 const filtrarClientes = (val, update) => {
   update(() => {
     const index = val.toLowerCase()
-    clientes.value = clienteStore.clientes.filter(v => v.razao.toLowerCase().indexOf(index) > -1)
+    clientes.value = clienteStore.clientes.filter(v => v.razaoSocial.toLowerCase().indexOf(index) > -1)
   })
 }
 
-onMounted(() => carregarClientes())
+const handleForm = () => {
+  try {
+    const data = Object.assign({}, formVenda, { idEstabelecimento: formVenda.idEstabelecimento.id })
+    console.log('***** ', data)
+    registrarVendaCliente(data)
+    notfifySucess('Venda registrada com sucesso!!')
+    router.push({name: 'clientes'})
+    formVenda = {}
+  } catch (error) {
+    notfifyError(error.message)
+  }
+}
+
+onMounted(() => {
+  carregarClientes()
+  carregarModulos()
+  carregarVencimentos()
+})
 
 </script>
