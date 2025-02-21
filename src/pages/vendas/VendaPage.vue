@@ -51,10 +51,8 @@
             option-label="descricao"
             label="Módulo"
             class="col-12 col-md-4"
-            emit-value
-            map-options
             lazy-rules
-            :rules="[val => (val && val.length > 0) || 'MÓDULO é campo obrigatório']"
+            :rules="[val => (!!val) || 'MÓDULO é campo obrigatório']"
           />
           <q-select
             outlined
@@ -66,15 +64,16 @@
             map-options
           />
           <div class="col-12 col-md-5 q-gutter-sm">
-            <span class="block">Vencimento</span>
+            <span class="block text-thin">Sugestões de Vencimento</span>
             <div class="flex justify-between">
               <q-radio v-model="formVenda.vencimento" v-for="vencimento in utilStore.vencimentos" :val="vencimento.descricao" :label="vencimento.dia.toString()" :key="vencimento.descricao" />
             </div>
           </div>
 
       </div>
-      <div class="flex flex-center q-my-sm">
+      <div class="flex flex-center q-gutter-sm q-my-sm">
           <q-btn label="Registrar " type="submit" size="md" color="primary" :class="{'full-width': $q.screen.xs}"/>
+          <q-btn label="Cancelar" @click="handleCancelar" size="md" color="red" :class="{'full-width': $q.screen.xs}"/>
         </div>
     </q-form>
     </q-card>
@@ -108,23 +107,28 @@ const {notfifyError, notfifySucess} = useNotify()
 let formVenda = reactive({
   idEstabelecimento: '',
   cpf: '',
-  qtdUsuarios: 0,
+  qtdUsuario: 0,
   proprietario: '',
   modulo: '',
-  vencimento: 0
+  vencimento: '',
+  valor: 0
 })
 
 
-const handleForm = () => {
+const handleForm = async() => {
   try {
-    const data = Object.assign({}, formVenda, { idEstabelecimento: formVenda.idEstabelecimento.id })
-    registrarVendaCliente(data)
+    const data = Object.assign({}, formVenda, {idEstabelecimento: clienteStore.cliente.id, valor: formVenda.modulo.preco * formVenda.qtdUsuario, modulo: formVenda.modulo.sigla })
+    await registrarVendaCliente(data)
     notfifySucess('Venda registrada com sucesso!!')
-    router.push({name: 'clientes'})
+    router.push({name: 'finalizar-venda'})
     formVenda = {}
   } catch (error) {
     notfifyError(error.message)
   }
+}
+
+const handleCancelar = () => {
+  router.replace({name: 'clientes'})
 }
 
 onMounted(() => {
