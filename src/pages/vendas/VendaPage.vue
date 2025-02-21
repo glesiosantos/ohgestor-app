@@ -2,72 +2,78 @@
   <q-page padding>
     <q-card class="full-width q-pa-md">
       <q-form class="q-gutter-y-sm" @submit.prevent="handleForm">
-      <div class="row">
-        <q-select
-          v-model="formVenda.idEstabelecimento"
-          :options="clientes"
-          option-label="razaoSocial"
-          option-value="id"
-          label="Buscar Cliente"
-          filled
-          use-input
-          input-debounce="300"
-          @filter="filtrarClientes"
-          hint="Informe no minimo 2 caracteres"
-          class="col-12"
-        >
-          <template v-slot:no-option>
-            <q-item>
-              <q-item-section class="text-grey">
-                No results
-              </q-item-section>
-            </q-item>
-          </template>
-        </q-select>
-      </div>
 
-      <div class="row q-col-gutter-sm q-mt-xs">
-        <q-input
-          outlined
-          v-model="formVenda.cpf"
-          label="CPF do Proprietário"
-          mask="###.###.###-##"
-          class="col-12 col-md-4"
-          lazy-rules
-          :rules="[val => (val && val.length > 0) || 'CPF é campo obrigatório']"
-      />
-
-      <q-input
-        outlined
-        v-model="formVenda.proprietario"
-        label="Nome do proprietário"
-        class="col-12 col-md-8"
-        lazy-rules
-        :rules="[val => (val && val.length > 0) || 'Nome é campo obrigatório']"
-      />
-      </div>
-
-      <div class="row q-col-gutter-sm">
-        <q-select
-          outlined
-          v-model="formVenda.modulo"
-          :options="utilStore.modulos"
-          option-value="sigla"
-          option-label="descricao"
-          label="Módulo"
-          class="col-12 col-md-6"
-          emit-value
-          map-options
-          lazy-rules
-          :rules="[val => (val && val.length > 0) || 'MÓDULO é campo obrigatório']"
+        <div class="row q-col-gutter-sm">
+          <q-input
+            outlined
+            disable
+            v-model="clienteStore.cliente.cpfOuCnpj"
+            label="CPF/CNPJ"
+            class="col-12 col-md-4"
         />
-        <div class="col-12 col-md-6 q-gutter-sm flex justify-between">
-          <q-radio v-model="formVenda.vencimento" v-for="vencimento in utilStore.vencimentos" :val="vencimento.descricao" :label="vencimento.dia.toString()" :key="vencimento.descricao" />
+
+        <q-input
+            outlined
+            v-model="clienteStore.cliente.razaoSocial"
+            label="Nome/Razão Social"
+            class="col-12 col-md-8"
+            disable
+        />
         </div>
 
+        <div class="row q-col-gutter-sm q-mt-xs">
+          <q-input
+            outlined
+            v-model="formVenda.cpf"
+            label="CPF do Proprietário"
+            mask="###.###.###-##"
+            class="col-12 col-md-4"
+            lazy-rules
+            :rules="[val => (val && val.length > 0) || 'CPF é campo obrigatório']"
+        />
+
+        <q-input
+          outlined
+          v-model="formVenda.proprietario"
+          label="Nome do proprietário"
+          class="col-12 col-md-8"
+          lazy-rules
+          :rules="[val => (val && val.length > 0) || 'Nome é campo obrigatório']"
+        />
+        </div>
+
+        <div class="row q-col-gutter-sm">
+          <q-select
+            outlined
+            v-model="formVenda.modulo"
+            :options="utilStore.modulos"
+            option-value="sigla"
+            option-label="descricao"
+            label="Módulo"
+            class="col-12 col-md-4"
+            lazy-rules
+            :rules="[val => (!!val) || 'MÓDULO é campo obrigatório']"
+          />
+          <q-select
+            outlined
+            v-model="formVenda.qtdUsuario"
+            :options="qtdUsuarios"
+            label="Quantidade de usuários"
+            class="col-12 col-md-3"
+            emit-value
+            map-options
+          />
+          <div class="col-12 col-md-5 q-gutter-sm">
+            <span class="block text-thin">Sugestões de Vencimento</span>
+            <div class="flex justify-between">
+              <q-radio v-model="formVenda.vencimento" v-for="vencimento in utilStore.vencimentos" :val="vencimento.descricao" :label="vencimento.dia.toString()" :key="vencimento.descricao" />
+            </div>
+          </div>
+
       </div>
-      <div class="flex flex-center q-my-sm">
+      <div class="flex flex-center q-gutter-sm q-my-sm">
           <q-btn label="Registrar " type="submit" size="md" color="primary" :class="{'full-width': $q.screen.xs}"/>
+          <q-btn label="Cancelar" @click="handleCancelar" size="md" color="red" :class="{'full-width': $q.screen.xs}"/>
         </div>
     </q-form>
     </q-card>
@@ -82,50 +88,54 @@ import { vendaService } from 'src/services/venda_service'
 import { useClienteStore } from 'src/stores/cliente_store'
 import { useUtilStore } from 'src/stores/util_store'
 import { onMounted, reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
-const {carregarClientes } = clienteService()
+const {carregarClientes, carregarClientePeloDocumento } = clienteService()
 const { carregarModulos, carregarVencimentos } = utilService()
 const { registrarVendaCliente } = vendaService()
-const clienteStore = useClienteStore()
-const utilStore = useUtilStore()
-const router = useRouter()
-const {notfifyError, notfifySucess} = useNotify()
 
-const clientes = ref([])
+const utilStore = useUtilStore()
+const clienteStore = useClienteStore()
+
+const router = useRouter()
+const route = useRoute()
+
+const qtdUsuarios = ref([1,2,3,4,5])
+
+const {notfifyError, notfifySucess} = useNotify()
 
 let formVenda = reactive({
   idEstabelecimento: '',
   cpf: '',
+  qtdUsuario: 0,
   proprietario: '',
   modulo: '',
-  vencimento: 0
+  vencimento: '',
+  valor: 0
 })
 
-const filtrarClientes = (val, update) => {
-  update(() => {
-    const index = val.toLowerCase()
-    clientes.value = clienteStore.clientes.filter(v => v.razaoSocial.toLowerCase().indexOf(index) > -1)
-  })
-}
 
-const handleForm = () => {
+const handleForm = async() => {
   try {
-    const data = Object.assign({}, formVenda, { idEstabelecimento: formVenda.idEstabelecimento.id })
-    console.log('***** ', data)
-    registrarVendaCliente(data)
+    const data = Object.assign({}, formVenda, {idEstabelecimento: clienteStore.cliente.id, valor: formVenda.modulo.preco * formVenda.qtdUsuario, modulo: formVenda.modulo.sigla })
+    await registrarVendaCliente(data)
     notfifySucess('Venda registrada com sucesso!!')
-    router.push({name: 'clientes'})
+    router.push({name: 'finalizar-venda'})
     formVenda = {}
   } catch (error) {
     notfifyError(error.message)
   }
 }
 
+const handleCancelar = () => {
+  router.replace({name: 'clientes'})
+}
+
 onMounted(() => {
   carregarClientes()
   carregarModulos()
   carregarVencimentos()
+  carregarClientePeloDocumento(route.params.documento)
 })
 
 </script>

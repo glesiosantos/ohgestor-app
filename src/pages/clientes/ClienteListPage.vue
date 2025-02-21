@@ -33,7 +33,7 @@
       </template>
 
       <template v-slot:body-cell-actions="props">
-        <q-td :props="props">
+        <q-td :props="props" class="q-gutter-x-xs">
           <!-- Botões de Editar e Excluir -->
           <q-btn
             round
@@ -41,6 +41,23 @@
             color="primary"
             size="sm"
             icon="edit"
+          />
+
+          <q-btn
+            round
+            dense
+            :to="{name: 'vender-modulo', params: {documento: props.row.cpfOuCnpj}}"
+            color="green"
+            size="sm"
+            icon="point_of_sale"
+          />
+
+          <q-btn
+            round
+            dense
+            color="red"
+            size="sm"
+            icon="lock"
           />
         </q-td>
       </template>
@@ -78,11 +95,10 @@ const columns = [
    },
   {
     label: 'Nome Fantasia',
-    align: 'center',
+    align: 'rigth',
     field: row => row.nomeFantasia,
     format: val => `${val}`,
    },
-  { label: 'Proprietário', field: 'proprietario', align: 'rigth' },
   { label: 'Estabelecimento', field: row => row.estabelecimento, align: 'rigth' },
   { label: 'Integrado', field: 'integrado', name: 'integrado', align: 'center' },
   { label: 'Vencimento', field: 'vencimento', align: 'center' },
