@@ -13,7 +13,12 @@ export default function useNotify() {
     message: message || 'Failed!'
   })
 
+  const notfifyWarning = (message) => $q.notify({
+    type: 'warning',
+    message: message || 'Warning!'
+  })
 
-  return { notfifySucess, notfifyError }
+
+  return { notfifySucess, notfifyError, notfifyWarning }
 
 }

@@ -6,7 +6,7 @@
       flat
       bordered
       :columns="columns"
-      :rows="usuarios"
+      :rows="usuarioStore.usuarios"
       :filter="filter"
     >
       <template v-slot:top>
@@ -62,7 +62,6 @@ const filter = ref('')
 
 const { carregarUsuarios } = usuarioService()
 const usuarioStore = useUsuarioStore()
-const usuarios = usuarioStore.usuarios
 
 const columns = [
   {
@@ -84,5 +83,5 @@ const columns = [
 ]
 
 const formUsuario = () => router.push({ name: 'usuario-form'})
-onMounted(() => carregarUsuarios() )
+onMounted(() => carregarUsuarios())
 </script>

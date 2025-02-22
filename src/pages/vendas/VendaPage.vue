@@ -72,9 +72,9 @@
 
       </div>
       <div class="flex flex-center q-gutter-sm q-my-sm">
-          <q-btn label="Registrar " type="submit" size="md" color="primary" :class="{'full-width': $q.screen.xs}"/>
-          <q-btn label="Cancelar" @click="handleCancelar" size="md" color="red" :class="{'full-width': $q.screen.xs}"/>
-        </div>
+        <q-btn label="Registrar " type="submit" size="md" color="primary" :class="{'full-width': $q.screen.xs}"/>
+        <q-btn label="Cancelar" @click="handleCancelar" size="md" color="red" :class="{'full-width': $q.screen.xs}"/>
+      </div>
     </q-form>
     </q-card>
   </q-page>
