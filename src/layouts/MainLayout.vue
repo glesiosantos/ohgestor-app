@@ -83,7 +83,7 @@ import { ref } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from 'src/stores/auth_store'
-
+''
 const store = useAuthStore()
 
 const user = store.auth
@@ -98,6 +98,11 @@ const linksList = [
     title: 'Clientes',
     icon: 'groups',
     route: { name: 'clientes' }
+  },
+  {
+    title: 'Usuarios',
+    icon: 'manage_accounts',
+    route: { name: 'usuarios' }
   }
 ]
 
