@@ -10,6 +10,8 @@
             v-model="form.nome"
             :style="{ textTransform: 'uppercase' }"
             label="Nome"
+            lazy-rules
+            :rules="[val => (val && val.length > 0) || 'NOME é campo obrigatório']"
           />
           <q-input
             outlined
@@ -17,6 +19,8 @@
             type="email"
             v-model="form.email"
             label="E-mail"
+            lazy-rules
+            :rules="[val => (val && val.length > 0) || 'EMAIL é campo obrigatório']"
           />
         </div>
         <div class="row q-col-gutter-sm q-mt-xs">
@@ -64,6 +68,9 @@ const form = reactive({
   perfil: '',
   ativo: false
 })
+
+// validar email
+// const emailValidate = (val) => val.test(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/) || "E-mail inválido"
 
 const handleCancelar = () => router.replace({name: 'usuarios'})
 
