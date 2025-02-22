@@ -19,7 +19,7 @@
 
       <!-- QR Code Pix -->
       <q-card-section class="flex flex-center">
-        <Qrcode :value="pedidoStore.pedido.payload" :size="200" level="H" />
+        <q-img :src="imageSrc"/>
       </q-card-section>
 
       <!-- Botão Copiar Código Pix -->
@@ -27,13 +27,15 @@
         <q-btn color="primary" @click="copyPixCode">Copiar Código Pix</q-btn>
         <q-tooltip>Copiar código Pix para pagamento</q-tooltip>
       </q-card-section>
-      <q-btn color="primary" @click="router.push({ name: 'clientes'})">Todos os Clientes</q-btn>
+      <q-card-section class="text-center">
+        <q-btn color="red" @click="router.push({ name: 'clientes'})">Voltar para Clientes</q-btn>
+      </q-card-section>
     </q-card>
   </q-page>
 </template>
 
 <script setup>
-import Qrcode from 'qrcode.vue'
+
 import useNotify from 'src/composables/UseNotify'
 import { usePedidoStore } from 'src/stores/pedido_store'
 import { computed} from 'vue'
@@ -48,6 +50,8 @@ const copyPixCode = () => {
       navigator.clipboard.writeText(pedidoStore.pedido.payload);
       notfifySucess("Código Pix copiado!")
 }
+
+const imageSrc = computed(() => `data:image/png;base64,${pedidoStore.pedido.encodeImage}`)
 
 const total = computed(() => pedidoStore.pedido.quantidade * pedidoStore.pedido.valor)
 </script>
