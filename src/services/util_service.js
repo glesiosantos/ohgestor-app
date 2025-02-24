@@ -27,11 +27,16 @@ export const utilService = () => {
     utilStore.popularVencimentos(response.data)
   }
 
+  const carregarPerfis = async () => {
+    const response = await api.get('v1/utils/perfis', {headers: {Authorization: authStore.auth.token}})
+    utilStore.popularPerfis(response.data)
+  }
+
   const carregarEnderecoViaCep = async (data) => {
     const cep = data.replaceAll('-','')
     const response = await api.get(`https://viacep.com.br/ws/${cep}/json/`)
     return response.data
   }
 
-  return { carregarEstados, carregarEstabelecimentoComerciais, carregarModulos, carregarVencimentos, carregarEnderecoViaCep }
+  return { carregarEstados, carregarEstabelecimentoComerciais, carregarModulos, carregarVencimentos, carregarPerfis, carregarEnderecoViaCep }
 }
