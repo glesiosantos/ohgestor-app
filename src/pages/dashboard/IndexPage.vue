@@ -1,132 +1,137 @@
 <template>
-  <q-page class="q-pa-md">
-    <!-- Linha de Cards -->
-    <div class="row q-col-gutter-xs">
-      <q-card class="col-12 col-md-2 bg-primary text-white small-card q-mb-md">
-        <q-card-section class="flex items-center">
-          <q-icon name="groups" size="3em" class="q-mr-sm animate-icon" />
-          <div>
-            <div class="text-h6">Clientes</div>
-            <div class="text-subtitle1">{{ clientesTotal }}</div>
-          </div>
+  <q-page padding>
+    <h4 class="q-mx-md">Dashboard de Vendas</h4>
+
+    <!-- Primeira linha - Cartões -->
+    <div class="row q-col-gutter-md">
+      <q-card class="col-12 col-md-4 q-pa-md" flat bordered>
+        <q-card-section>
+          <div class="text-h6">Vendas Hoje</div>
+          <div class="text-subtitle2">R$ {{ todaySales.toFixed(2) }}</div>
         </q-card-section>
       </q-card>
 
-      <q-card class="col-12 col-md-2 bg-secondary text-white small-card q-mb-md">
-        <q-card-section class="flex items-justify">
-          <q-icon name="person_add" size="3em" class="q-mr-sm animate-icon" />
-          <div class="flex">
-            <div class="text-h6">Captado Hoje</div>
-            <div class="text-subtitle1">{{ clientesHoje }}</div>
-          </div>
+      <q-card class="col-12 col-md-4 q-pa-md" flat bordered>
+        <q-card-section>
+          <div class="text-h6">Vendas Mês</div>
+          <div class="text-subtitle2">R$ {{ monthSales.toFixed(2) }}</div>
         </q-card-section>
       </q-card>
 
-      <q-card class="col-12 col-md-2 bg-accent text-white small-card q-mb-md">
-        <q-card-section class="flex items-center">
-          <q-icon name="attach_money" size="3em" class="q-mr-sm animate-icon" />
-          <div>
-            <div class="text-h6">Financeiro</div>
-            <div class="text-subtitle1">R$ {{ financeiro }}</div>
-          </div>
-        </q-card-section>
-      </q-card>
-
-      <q-card class="col-12 col-md-2 bg-positive text-white small-card q-mb-md">
-        <q-card-section class="flex items-center">
-          <q-icon name="people" size="3em" class="q-mr-sm animate-icon" />
-          <div>
-            <div class="text-h6">Usuários</div>
-            <div class="text-subtitle1">{{ usuariosTotal }}</div>
-          </div>
+      <q-card class="col-12 col-md-4 q-pa-md" flat bordered>
+        <q-card-section>
+          <div class="text-h6">Ticket Médio</div>
+          <div class="text-subtitle2">R$ {{ averageTicket.toFixed(2) }}</div>
         </q-card-section>
       </q-card>
     </div>
 
-    <!-- Linha do Gráfico -->
-    <!-- <div class="row q-mt-md">
-      <q-card class="col-12 q-pa-md">
+    <!-- Segunda linha - Gráficos -->
+    <div class="row q-col-gutter-md q-my-md">
+      <!-- Gráfico de acompanhamento de vendas -->
+      <q-card class="col-12 col-md-6" flat bordered>
         <q-card-section>
-          <div class="text-h6">Evolução de Captação</div>
-          <canvas ref="chartCanvas"></canvas>
+          <div class="text-h6">Acompanhamento de Vendas</div>
+          <VueApexCharts
+            type="line"
+            height="350"
+            :options="salesChartOptions"
+            :series="salesSeries"
+          />
         </q-card-section>
       </q-card>
-    </div> -->
 
-    <!-- Linha da Tabela -->
-    <div class="row q-mt-md">
-      <q-card class="col-12 q-pa-md">
+      <!-- Gráfico de desempenho -->
+
+      <q-card class="col-12 col-md-6" flat bordered>
         <q-card-section>
-          <div class="text-h6">Clientes Captados</div>
-          <q-table :rows="clientes" :columns="colunas" row-key="id" />
+          <div class="text-h6">Desempenho Mensal</div>
+          <VueApexCharts
+            type="bar"
+            height="350"
+            :options="performanceChartOptions"
+            :series="performanceSeries"
+          />
         </q-card-section>
+      </q-card>
+    </div>
+    <div class="row q-col-gutter-md q-mt-md">
+      <q-card flat bordered class="full-width">
+          <div class="text-h6">Últimas Vendas do Dia</div>
+          <q-table class="full-width"
+            :rows="lastSales"
+            :columns="salesColumns"
+            row-key="id"
+            :pagination="{ rowsPerPage: 5 }"
+            hide-pagination
+          />
       </q-card>
     </div>
   </q-page>
 </template>
 
-<script>
-import { ref } from 'vue'
+<script setup>
+import { ref, onMounted } from 'vue'
+import VueApexCharts from 'vue3-apexcharts'
 
-export default {
-  setup() {
-    const clientesTotal = ref(1500);
-    const clientesHoje = ref(8);
-    const financeiro = ref(50000);
-    const usuariosTotal = ref(250);
-    const chartCanvas = ref(null);
+// Dados dos cartões
+const todaySales = ref(1500.00)
+const monthSales = ref(24500.00)
+const averageTicket = ref(850.00)
 
-    const clientes = ref([
-      { id: 1, nome: 'Empresa X', vendedor: 'Carlos Silva' },
-      { id: 2, nome: 'Empresa Y', vendedor: 'Ana Souza' },
-      { id: 3, nome: 'Empresa Z', vendedor: 'Marcos Lima' }
-    ]);
+// Dados do gráfico de vendas
+const salesSeries = ref([{
+  name: 'Vendas',
+  data: [1200, 1500, 900, 1800, 2000, 1500, 1700]
+}])
 
-    const colunas = [
-      { name: 'nome', label: 'Cliente', align: 'left', field: 'nome' },
-      { name: 'vendedor', label: 'Vendedor', align: 'left', field: 'vendedor' }
-    ];
+const salesChartOptions = ref({
+  chart: { type: 'line', height: 350 },
+  xaxis: { categories: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom'] },
+  colors: ['#008FFB'],
+  title: { text: 'Vendas Semanais' }
+})
 
-    // onMounted(() => {
-    //   new Chart(chartCanvas.value, {
-    //     type: 'line',
-    //     data: {
-    //       labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-    //       datasets: [{
-    //         label: 'Captação de Clientes',
-    //         data: [5, 15, 10, 20, 25, 30],
-    //         borderColor: '#007bff',
-    //         borderWidth: 2,
-    //         fill: false
-    //       }]
-    //     },
-    //     options: {
-    //       responsive: true,
-    //       maintainAspectRatio: false
-    //     }
-    //   });
-    // });
+// Dados do gráfico de desempenho
+const performanceSeries = ref([{
+  name: 'Desempenho',
+  data: [75, 82, 68, 95]
+}])
 
-    return { clientesTotal, clientesHoje, financeiro, usuariosTotal, chartCanvas, clientes, colunas };
+const performanceChartOptions = ref({
+  chart: { type: 'bar', height: 350 },
+  xaxis: { categories: ['Jan', 'Fev', 'Mar', 'Abr'] },
+  colors: ['#00E396'],
+  title: { text: 'Desempenho Mensal (%)' }
+})
+
+// Dados da tabela de últimas vendas
+const lastSales = ref([
+  { id: 1, time: '09:15', customer: 'João Silva', value: 450.00 },
+  { id: 2, time: '11:30', customer: 'Maria Souza', value: 320.00 },
+  { id: 3, time: '14:45', customer: 'Pedro Santos', value: 780.00 }
+])
+
+const salesColumns = [
+  { name: 'time', align: 'left', label: 'Hora', field: 'time' },
+  { name: 'customer', align: 'left', label: 'Cliente', field: 'customer' },
+  {
+    name: 'value',
+    align: 'right',
+    label: 'Valor',
+    field: 'value',
+    format: (val) => `R$ ${val.toFixed(2)}`
   }
-};
+]
+
+// Carregar dados iniciais
+onMounted(() => {
+  // Aqui você pode adicionar chamadas API para atualizar os dados reais
+})
 </script>
 
 <style scoped>
-.q-card.small-card {
-  padding: 10px;
-  text-align: center;
+.q-card {
   min-height: 100px;
-  margin: 10px;
-  border-radius: 10px;
-}
-
-.animate-icon {
-  animation: pulse 1.5s infinite alternate;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.2); }
 }
 </style>
