@@ -1,132 +1,138 @@
+<!-- DashboardAdmin.vue -->
 <template>
   <q-page class="q-pa-md">
-    <!-- Linha de Cards -->
-    <div class="row q-col-gutter-xs">
-      <q-card class="col-12 col-md-2 bg-primary text-white small-card q-mb-md">
-        <q-card-section class="flex items-center">
-          <q-icon name="groups" size="3em" class="q-mr-sm animate-icon" />
-          <div>
-            <div class="text-h6">Clientes</div>
-            <div class="text-subtitle1">{{ clientesTotal }}</div>
-          </div>
-        </q-card-section>
-      </q-card>
+    <div class="row q-col-gutter-md">
+      <!-- Cards de Informações -->
+      <div class="col-12 col-md-3">
+        <q-card class="my-card">
+          <q-card-section class="bg-primary text-white">
+            <div class="text-h6">Total de Clientes</div>
+          </q-card-section>
+          <q-card-section class="text-center">
+            <div class="text-h4">{{ totalClientes }}</div>
+          </q-card-section>
+        </q-card>
+      </div>
 
-      <q-card class="col-12 col-md-2 bg-secondary text-white small-card q-mb-md">
-        <q-card-section class="flex items-justify">
-          <q-icon name="person_add" size="3em" class="q-mr-sm animate-icon" />
-          <div class="flex">
-            <div class="text-h6">Captado Hoje</div>
-            <div class="text-subtitle1">{{ clientesHoje }}</div>
-          </div>
-        </q-card-section>
-      </q-card>
+      <div class="col-12 col-md-3">
+        <q-card class="my-card">
+          <q-card-section class="bg-primary text-white">
+            <div class="text-h6">Total de Pedidos</div>
+          </q-card-section>
+          <q-card-section class="text-center">
+            <div class="text-h4">{{ totalPedidos }}</div>
+          </q-card-section>
+        </q-card>
+      </div>
 
-      <q-card class="col-12 col-md-2 bg-accent text-white small-card q-mb-md">
-        <q-card-section class="flex items-center">
-          <q-icon name="attach_money" size="3em" class="q-mr-sm animate-icon" />
-          <div>
-            <div class="text-h6">Financeiro</div>
-            <div class="text-subtitle1">R$ {{ financeiro }}</div>
-          </div>
-        </q-card-section>
-      </q-card>
+      <div class="col-12 col-md-3">
+        <q-card class="my-card">
+          <q-card-section class="bg-primary text-white">
+            <div class="text-h6">Total de Pedidos</div>
+          </q-card-section>
+          <q-card-section class="text-center">
+            <div class="text-h4">{{ totalPedidos }}</div>
+          </q-card-section>
+        </q-card>
+      </div>
 
-      <q-card class="col-12 col-md-2 bg-positive text-white small-card q-mb-md">
-        <q-card-section class="flex items-center">
-          <q-icon name="people" size="3em" class="q-mr-sm animate-icon" />
-          <div>
-            <div class="text-h6">Usuários</div>
-            <div class="text-subtitle1">{{ usuariosTotal }}</div>
-          </div>
-        </q-card-section>
-      </q-card>
+      <div class="col-12 col-md-3">
+        <q-card class="my-card">
+          <q-card-section class="bg-primary text-white">
+            <div class="text-h6">Total de Pedidos</div>
+          </q-card-section>
+          <q-card-section class="text-center">
+            <div class="text-h4">{{ totalPedidos }}</div>
+          </q-card-section>
+        </q-card>
+      </div>
     </div>
 
-    <!-- Linha do Gráfico -->
-    <!-- <div class="row q-mt-md">
-      <q-card class="col-12 q-pa-md">
-        <q-card-section>
-          <div class="text-h6">Evolução de Captação</div>
-          <canvas ref="chartCanvas"></canvas>
-        </q-card-section>
-      </q-card>
-    </div> -->
+    <!-- Gráficos -->
+    <div class="row q-mt-md q-col-gutter-md">
+      <div class="col-12 col-md-6">
+        <q-card>
+          <q-card-section>
+            <div class="text-h6">Acompanhamento de Atendimentos</div>
+          </q-card-section>
+          <q-card-section>
+            <VueApexCharts type="line" height="350" :options="chartOptions" :series="atendimentoSeries"/>
+          </q-card-section>
+        </q-card>
+      </div>
+      <div class="col-12 col-md-6">
+        <q-card>
+          <q-card-section>
+            <div class="text-h6">Vendas (Serviços e Produtos)</div>
+          </q-card-section>
+          <q-card-section>
+            <VueApexCharts type="bar" height="350" :options="chartOptions" :series="vendasSeries"/>
+          </q-card-section>
+        </q-card>
+      </div>
+    </div>
 
-    <!-- Linha da Tabela -->
+    <!-- Lista de Serviços -->
     <div class="row q-mt-md">
-      <q-card class="col-12 q-pa-md">
-        <q-card-section>
-          <div class="text-h6">Clientes Captados</div>
-          <q-table :rows="clientes" :columns="colunas" row-key="id" />
-        </q-card-section>
-      </q-card>
+      <div class="col-12 col-md-6">
+        <q-card class="q-pa-sm">
+          <q-card-section>
+            <div class="text-h6">Ultimos Clientes</div>
+          </q-card-section>
+          <q-table
+            :rows="servicos"
+            :columns="columns"
+            row-key="id"
+            hide-pagination=""
+          />
+          <div class="flex flex-center q-my-sm">
+            <q-btn label="Listar Pedidos" size="md" color="secondary" :class="{'full-width': $q.screen.xs}" @click="pedidosRouter"/>
+          </div>
+        </q-card>
+      </div>
     </div>
   </q-page>
 </template>
 
-<script>
+<script setup>
+import router from 'src/router'
 import { ref } from 'vue'
+import VueApexCharts from 'vue3-apexcharts'
 
-export default {
-  setup() {
-    const clientesTotal = ref(1500);
-    const clientesHoje = ref(8);
-    const financeiro = ref(50000);
-    const usuariosTotal = ref(250);
-    const chartCanvas = ref(null);
+  const totalClientes = ref(150)
+  const totalPedidos = ref(300)
 
-    const clientes = ref([
-      { id: 1, nome: 'Empresa X', vendedor: 'Carlos Silva' },
-      { id: 2, nome: 'Empresa Y', vendedor: 'Ana Souza' },
-      { id: 3, nome: 'Empresa Z', vendedor: 'Marcos Lima' }
-    ]);
+  const chartOptions = ref({
+    chart: { id: 'basic-chart' },
+    xaxis: { categories: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'] },
+  })
 
-    const colunas = [
-      { name: 'nome', label: 'Cliente', align: 'left', field: 'nome' },
-      { name: 'vendedor', label: 'Vendedor', align: 'left', field: 'vendedor' }
-    ];
+  const atendimentoSeries = ref([{ name: 'Atendimentos', data: [30, 40, 35, 50, 49, 60] }])
 
-    // onMounted(() => {
-    //   new Chart(chartCanvas.value, {
-    //     type: 'line',
-    //     data: {
-    //       labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-    //       datasets: [{
-    //         label: 'Captação de Clientes',
-    //         data: [5, 15, 10, 20, 25, 30],
-    //         borderColor: '#007bff',
-    //         borderWidth: 2,
-    //         fill: false
-    //       }]
-    //     },
-    //     options: {
-    //       responsive: true,
-    //       maintainAspectRatio: false
-    //     }
-    //   });
-    // });
+  const vendasSeries= ref([
+    { name: 'Serviços', data: [20, 30, 25, 40, 35, 50] },
+    { name: 'Produtos', data: [10, 15, 20, 25, 30, 35] },
+  ])
 
-    return { clientesTotal, clientesHoje, financeiro, usuariosTotal, chartCanvas, clientes, colunas };
-  }
-};
+  const columns = ([
+    { name: 'id', label: 'ID', field: 'id', sortable: true },
+    { name: 'cliente', label: 'Cliente', field: 'cliente', sortable: true },
+    { name: 'servico', label: 'Modulo', field: 'servico', sortable: true },
+    { name: 'status', label: 'Status', field: 'status', sortable: true },
+  ])
+
+  const servicos = ref([
+    { id: 1, cliente: 'João Silva', servico: 'Troca de Óleo', status: 'Pendente' },
+    { id: 2, cliente: 'Maria Souza', servico: 'Alinhamento', status: 'Concluido' },
+  ])
+
+  const pedidosRouter = () => router.push({name: 'pedidos'})
+
+  // const pagination = ref ({ rowsPerPage: 10 })
 </script>
 
-<style scoped>
-.q-card.small-card {
-  padding: 10px;
-  text-align: center;
-  min-height: 100px;
-  margin: 10px;
-  border-radius: 10px;
-}
-
-.animate-icon {
-  animation: pulse 1.5s infinite alternate;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.2); }
+<style>
+.my-card {
+  height: 100%;
 }
 </style>

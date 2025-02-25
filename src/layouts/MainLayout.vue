@@ -103,6 +103,11 @@ const linksList = [
     title: 'Usuarios',
     icon: 'manage_accounts',
     route: { name: 'usuarios' }
+  },
+  {
+    title: 'Pedidos',
+    icon: 'toc',
+    route: { name: 'pedidos' }
   }
 ]
 
