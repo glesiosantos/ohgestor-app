@@ -18,7 +18,6 @@ export const usuarioService = () => {
   }
 
   const alterarSenha = async (data) => {
-
     const response = await api.post('v1/auth/alterar-senha',{nova: data}, {headers: {Authorization: authStore.auth.token}})
     return response
   }
