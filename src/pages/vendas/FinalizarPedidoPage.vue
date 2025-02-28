@@ -14,7 +14,7 @@
           </q-item>
         </q-list>
         <q-separator />
-        <div class="text-h6 text-center q-mt-md">Total: R$ {{ total.toFixed(2)}}</div>
+        <div class="text-h6 text-center q-mt-md">Total: R$ {{ pedidoStore.pedido.valor.toFixed(2)}}</div>
       </q-card-section>
 
       <!-- QR Code Pix -->
@@ -52,6 +52,4 @@ const copyPixCode = () => {
 }
 
 const imageSrc = computed(() => `data:image/png;base64,${pedidoStore.pedido.encodeImage}`)
-
-const total = computed(() => pedidoStore.pedido.quantidade * pedidoStore.pedido.valor)
 </script>

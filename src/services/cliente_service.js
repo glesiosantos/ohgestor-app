@@ -20,7 +20,6 @@ export const clienteService = () => {
   const carregarClientePeloDocumento = async (data) => {
     const response = await api.get(`/v1/clientes/${data}`, {headers: {Authorization: authStore.auth.token}})
     clienteStore.carregarClienteViaDocumento(response.data)
-    console.log(response.data)
   }
 
   return { carregarClientes, salvarCliente, carregarClientePeloDocumento }

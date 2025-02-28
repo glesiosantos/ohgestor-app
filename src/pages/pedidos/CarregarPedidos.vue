@@ -49,6 +49,19 @@
           <q-badge :color="getStatusColor(props.row.situacao)" :label="props.row.situacao" />
         </q-td>
       </template>
+
+      <template v-slot:body-cell-opcao="props">
+        <q-td :props="props">
+          <q-btn
+            color="primary"
+            @click="copyPixCode(props.row.payload)"
+            round
+            dense
+          >
+            <q-icon name="share" left/>
+          </q-btn>
+        </q-td>
+      </template>
     </q-table>
   </q-page>
 </template>
@@ -58,7 +71,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import useNotify from 'src/composables/UseNotify'
 import { pedidoService } from 'src/services/pedido_service'
 
-const {notfifyError} = useNotify()
+const {notfifyError, notfifySucess} = useNotify()
 // Dados reativos
 const orders = ref([])
 const loading = ref(false)
@@ -87,7 +100,7 @@ const columns = [
   { name: 'total', label: 'Total', field: 'total', sortable: true, align: 'center' },
   { name: 'modulo', label: 'Modulo', field: 'modulo', sortable: true, align: 'center' },
   { name: 'situacao', label: 'Situacão', field: 'situacao', sortable: true, align: 'center' },
-  { label: 'Opções', align: 'center' },
+  { name: 'opcao', label: 'Opções', align: 'center' },
 ]
 
 const pagination = ref({
@@ -99,7 +112,6 @@ const pagination = ref({
 
 // Funções
 const getStatusColor = (status) => {
-  console.log("***** ",status)
   const colors = {
     'PENDENTE': 'yellow',
     'CONCLUIDO': 'green',
@@ -125,6 +137,11 @@ const fetchOrders = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const copyPixCode = (payload) => {
+    navigator.clipboard.writeText(payload);
+    notfifySucess("Código Pix copiado!")
 }
 
 onMounted(() => {
