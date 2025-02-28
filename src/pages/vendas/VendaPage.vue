@@ -36,6 +36,7 @@
           outlined
           v-model="formVenda.proprietario"
           label="Nome do proprietário"
+          :style="{ textTransform: 'uppercase' }"
           class="col-12 col-md-8"
           lazy-rules
           :rules="[val => (val && val.length > 0) || 'Nome é campo obrigatório']"
@@ -45,24 +46,18 @@
         <div class="row q-col-gutter-sm">
           <q-select
             outlined
-            v-model="formVenda.modulo"
-            :options="utilStore.modulos"
+            v-model="formVenda.plano"
+            :options="utilStore.planos"
             option-value="sigla"
             option-label="descricao"
-            label="Módulo"
+            label="Plano"
             class="col-12 col-md-4"
             lazy-rules
-            :rules="[val => (!!val) || 'MÓDULO é campo obrigatório']"
-          />
-          <q-select
-            outlined
-            v-model="formVenda.qtdUsuario"
-            :options="qtdUsuarios"
-            label="Quantidade de usuários"
-            class="col-12 col-md-3"
             emit-value
             map-options
+            :rules="[val => (!!val) || 'PLANO é campo obrigatório']"
           />
+
           <div class="col-12 col-md-5 q-gutter-sm">
             <span class="block text-thin">Sugestões de Vencimento</span>
             <div class="flex justify-between">
@@ -87,11 +82,11 @@ import { utilService } from 'src/services/util_service'
 import { vendaService } from 'src/services/venda_service'
 import { useClienteStore } from 'src/stores/cliente_store'
 import { useUtilStore } from 'src/stores/util_store'
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive} from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const {carregarClientes, carregarClientePeloDocumento } = clienteService()
-const { carregarModulos, carregarVencimentos } = utilService()
+const { carregarPlanos, carregarVencimentos } = utilService()
 const { registrarVendaCliente } = vendaService()
 
 const utilStore = useUtilStore()
@@ -100,8 +95,6 @@ const clienteStore = useClienteStore()
 const router = useRouter()
 const route = useRoute()
 
-const qtdUsuarios = ref([1,2,3,4,5])
-
 const {notfifyError, notfifySucess} = useNotify()
 
 let formVenda = reactive({
@@ -109,15 +102,16 @@ let formVenda = reactive({
   cpf: '',
   qtdUsuario: 0,
   proprietario: '',
-  modulo: '',
+  plano: '',
   vencimento: '',
-  valor: 0
 })
 
 
 const handleForm = async() => {
   try {
-    const data = Object.assign({}, formVenda, {idEstabelecimento: clienteStore.cliente.id, valor: formVenda.modulo.preco * formVenda.qtdUsuario, modulo: formVenda.modulo.sigla })
+    const data = Object.assign({}, formVenda, {idEstabelecimento: clienteStore.cliente.id })
+
+    console.log("**** **** ",data)
     await registrarVendaCliente(data)
     notfifySucess('Venda registrada com sucesso!!')
     router.push({name: 'finalizar-venda'})
@@ -133,7 +127,7 @@ const handleCancelar = () => {
 
 onMounted(() => {
   carregarClientes()
-  carregarModulos()
+  carregarPlanos()
   carregarVencimentos()
   carregarClientePeloDocumento(route.params.documento)
 })

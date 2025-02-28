@@ -48,6 +48,22 @@
               lazy-rules
               :rules="[val => (val && val.length > 0) || 'Whatsapp/Celular é campo obrigatório']"
             />
+
+            <q-select
+              outlined
+              :options="utilStore.modulos"
+              option-label="descricao"
+              option-value="sigla"
+              class="col-12 col-md-4"
+              type="text"
+              label="Modulo"
+              v-model="formCliente.modulo"
+              emit-value
+              map-options
+              lazy-rules
+              :rules="[val => (val && val.length > 0) || 'MÓDULO é campo obrigatório']"
+            />
+
           </div>
         </fieldset>
         <fieldset>
@@ -134,7 +150,7 @@ import { useUtilStore } from 'src/stores/util_store'
 const router = useRouter()
 const {notfifyError, notfifySucess} = useNotify()
 const {salvarCliente} = clienteService()
-const { carregarEstados, carregarEstabelecimentoComerciais, carregarEnderecoViaCep } = utilService()
+const { carregarEstados, carregarEstabelecimentoComerciais, carregarEnderecoViaCep, carregarModulos } = utilService()
 
 const utilStore = useUtilStore()
 
@@ -144,6 +160,7 @@ let formCliente = reactive({
   documento: '',
   razao: '',
   fantasia: '',
+  modulo: '',
   cep: '',
   logradouro: '',
   bairro: '',
@@ -198,6 +215,7 @@ const obterLocalizacao = () => {
 
 onMounted(() => {
   carregarEstados()
+  carregarModulos()
   carregarEstabelecimentoComerciais()
 })
 
