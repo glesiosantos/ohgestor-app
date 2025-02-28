@@ -44,11 +44,9 @@
       :loading="loading"
       :pagination="pagination"
     >
-      <template v-slot:body-cell-status="props">
+      <template v-slot:body-cell-situacao="props">
         <q-td :props="props">
-          <q-badge :color="getStatusColor(props.row.status)">
-            {{ props.row.status }}
-          </q-badge>
+          <q-badge :color="getStatusColor(props.row.situacao)" :label="props.row.situacao" />
         </q-td>
       </template>
     </q-table>
@@ -56,7 +54,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import useNotify from 'src/composables/UseNotify'
 import { pedidoService } from 'src/services/pedido_service'
 
@@ -65,6 +63,8 @@ const {notfifyError} = useNotify()
 const orders = ref([])
 const loading = ref(false)
 const { carregarPedidos } = pedidoService()
+
+let intervalId;
 
 const filters = ref({
   startDate: null,
@@ -86,7 +86,7 @@ const columns = [
   { name: 'customer', label: 'Cliente', field: 'cliente', sortable: true, align: 'center' },
   { name: 'total', label: 'Total', field: 'total', sortable: true, align: 'center' },
   { name: 'modulo', label: 'Modulo', field: 'modulo', sortable: true, align: 'center' },
-  { name: 'status', label: 'Status', field: 'situacao', sortable: true, align: 'center' },
+  { name: 'situacao', label: 'Situacão', field: 'situacao', sortable: true, align: 'center' },
   { label: 'Opções', align: 'center' },
 ]
 
@@ -99,10 +99,11 @@ const pagination = ref({
 
 // Funções
 const getStatusColor = (status) => {
+  console.log("***** ",status)
   const colors = {
     'PENDENTE': 'yellow',
-    'CANCELADO': 'green',
-    'CONCLUIDO': 'red'
+    'CONCLUIDO': 'green',
+    'CANCELADO': 'red'
   }
   return colors[status] || 'yellow'
 }
@@ -118,7 +119,6 @@ const fetchOrders = async () => {
 
     const response = await carregarPedidos(params)
     orders.value = response.data
-    console.log(orders.value)
   } catch (error) {
     console.log(error)
     notfifyError("Error ao carregar pedido")
@@ -127,5 +127,14 @@ const fetchOrders = async () => {
   }
 }
 
-onMounted(() => fetchOrders())
+onMounted(() => {
+  fetchOrders()
+  intervalId = setInterval(fetchOrders, 60 * 1000)
+})
+onUnmounted(() => {
+
+  if(intervalId) {
+    clearInterval(intervalId)
+  }
+})
 </script>

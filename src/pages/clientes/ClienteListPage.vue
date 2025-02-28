@@ -99,7 +99,7 @@ const columns = [
     field: row => row.nomeFantasia,
     format: val => `${val}`,
    },
-  { label: 'Estabelecimento', field: row => row.estabelecimento, align: 'rigth' },
+  { label: 'Modulo', field: row => row.modulo, align: 'rigth' },
   { label: 'Integrado', field: 'integrado', name: 'integrado', align: 'center' },
   { label: 'Vencimento', field: 'vencimento', align: 'center' },
   { label: 'Contato', field: 'contatos', name: 'contatos', align: 'rigth' },
