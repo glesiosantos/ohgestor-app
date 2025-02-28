@@ -1,14 +1,30 @@
+import authRouter from './../pages/auth/router'
+import clienteRouter from './../pages/clientes/router'
+import vendasRouter from './../pages/vendas/router'
+import usuarioRouters from './../pages/usuarios/router'
+import pedidoRouter from './../pages/pedidos/router'
+
 const routes = [
   {
-    path: '/',
+    path: '',
+    component: () => import('layouts/AuthLayout.vue'),
+    children: [...authRouter]
+  },
+  {
+    path: '',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') }
-    ]
+      { path: '', name: 'dashboard', component: () => import('src/pages/dashboard/IndexPage.vue') },
+      { path: '/profile', name: 'profile', component: () => import('src/pages/profile/PerfilPage.vue') },
+      ...clienteRouter,
+      ...vendasRouter,
+      ...usuarioRouters,
+      ...pedidoRouter
+    ],
+    meta: {
+      auth: true
+    }
   },
-
-  // Always leave this as last one,
-  // but you can also remove it
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue')
