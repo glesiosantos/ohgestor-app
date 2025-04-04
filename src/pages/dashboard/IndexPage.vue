@@ -96,8 +96,9 @@
 
 <script setup>
 import router from 'src/router'
-import { ref } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
+import { ref } from 'vue'
+
 
   const totalClientes = ref(150)
   const totalPedidos = ref(300)
