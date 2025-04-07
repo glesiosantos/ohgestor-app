@@ -77,7 +77,7 @@
 
 <script setup>
 import useNotify from 'src/composables/UseNotify'
-import { clienteService } from 'src/services/cliente_service'
+import { clienteService } from 'src/pages/clientes/services/cliente_service'
 import { utilService } from 'src/services/util_service'
 import { vendaService } from 'src/services/venda_service'
 import { useClienteStore } from 'src/stores/cliente_store'
