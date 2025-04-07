@@ -9,6 +9,7 @@
             :columns="columns"
             :rows="clienteStore.clientes"
             :filter="filter"
+            :pagination="pagination"
           >
             <template v-slot:top>
               <q-input outlined color="primary" v-model="filter" class="col-4 " :class="{'full-width': $q.screen.xs}">
@@ -25,6 +26,18 @@
                 :class="{'full-width q-mt-sm': $q.screen.xs}"/>
             </template>
 
+            <template v-slot:body-cell-ativo="props">
+              <q-td :props="props">
+                <q-icon name="circle" :color="props.row.ativo ? 'green-10' : 'red-10'"/>
+              </q-td>
+            </template>
+
+            <template v-slot:body-cell-integrado="props">
+              <q-td :props="props">
+                <q-icon name="circle" :color="props.row.integrado ? 'green-10' : 'red-10'"/>
+              </q-td>
+            </template>
+
             <template v-slot:body-cell-actions="props">
               <q-td :props="props" class="q-gutter-x-xs text-center">
                 <!-- <q-btn round dense color="primary text-black" size="md" @click="openDrawer('edit', props.row)" title="Adicionar um Carro">
@@ -33,11 +46,10 @@
                 <q-btn
                   round
                   dense
-                  color="green"
+                  color="warning"
                   size="md"
-                  icon="visibility"
-                  @click="visualizarCliente(props.row)"
-                  title="Visualizar Cliente"
+                  icon="edit"
+                  @click="openDrawer('edit', props.row)"
                 />
               </q-td>
             </template>
@@ -69,9 +81,11 @@ import useNotify from 'src/composables/UseNotify'
 import { utilService } from 'src/services/util_service'
 import { clienteService } from './services/cliente_service'
 import { useClienteStore } from 'src/stores/cliente_store'
+import { useFormatarDocumento } from 'src/composables/useFormatarDocumento'
 
 const { drawer, openDrawer,closeDrawer, isEdit, currentData } = useDrawer()
-const { notifyError, notifyWarning } = useNotify()
+const { notifyError, notifyWarning, notifySucess } = useNotify()
+const { formatarDocumento } = useFormatarDocumento()
 
 const { carregarEstados, carregarModulos } = utilService()
 const { salvarCliente, carregarClientes } = clienteService()
@@ -80,23 +94,31 @@ const { salvarCliente, carregarClientes } = clienteService()
 const clienteStore = useClienteStore()
 
 const filter = ref('')
-// const router = useRouter()
 
 const columns = [
   { label: 'CPF ou CNPJ',
-    field: row => row.cpfOuCnpj
+    field: row => formatarDocumento(row.documento),
+    align: 'rigth'
   },
-  { label: 'Razão Social', field: row => row.razaoSocial, format: val => `${val}`, align: 'left' },
-  { label: 'Nome', name: 'tipo', field: row => row.nomeFantasia, format: val => `${val}`, sortable: true, align: 'left' },
+  { label: 'Razão Social', field: row => row.razao, format: val => `${val}`, align: 'left' },
+  { label: 'Nome', name: 'tipo', field: row => row.fantasia, format: val => `${val}`, sortable: true, align: 'left' },
   { label: 'Tipo de Pessoa', name: 'tipo', field: row => row.tipoPessoa, format: val => `${val}`, sortable: true, align: 'left' },
   { label: 'Módulo', name: 'tipo', field: row => row.modulo, format: val => `${val}`, sortable: true, align: 'left' },
-  { label: 'Status do Cliente', name: 'tipo', field: row => row.ativo, format: val => `${val}`, sortable: true, align: 'center' },
-  { label: 'Dia do Venc.', name: 'tipo', field: row => row.vencimento, format: val => `${val}`, sortable: true, align: 'center' },
-  { label: 'Integrado', name: 'tipo', field: row => row.integrado, format: val => `${val}`, sortable: true, align: 'center' },
+  { label: 'Plano Contrado', name: 'tipo', field: row => row.plano, format: val => `${val}`, sortable: true, align: 'left' },
+  { label: 'Status do Cliente', name: 'ativo', field: row => row.ativo, format: val => `${val}`, sortable: true, align: 'center' },
+  { label: 'Dia do Venc.', name: 'vencimento', field: row => row.vencimento, format: val => `${val}`, sortable: true, align: 'center' },
+  { label: 'Integrado', name: 'integrado', field: row => row.integrado, format: val => `${val}`, sortable: true, align: 'center' },
   { label: 'Tipo de Pessoa', name: 'tipo', field: row => row.tipoPessoa, format: val => `${val}`, sortable: true, align: 'left' },
-  { label: 'Contatos', name: 'perfil', field: row => row.contatos[0], format: val => `${val}`, sortable: true, align: 'left' },
+  { label: 'Contatos', name: 'perfil', field: row => `+55${row.contatos[0]}`, format: val => `${val}`, sortable: true, align: 'left' },
   { label: 'Ações', field: 'actions', name: 'actions', align: 'center' }
 ]
+
+const pagination = {
+  rowsPerPage: 10, // Ajuste o número de registros por página aqui
+  page: 1,
+  sortBy: 'id',
+  descending: false
+}
 
 
 const handleSubmit = async (formData) => {
@@ -105,12 +127,19 @@ const handleSubmit = async (formData) => {
       console.log('', formData)
     } else {
       const response = await salvarCliente(formData)
-      console.log('*** *** ', response)
+      console.log('***** ****** response: ', response)
+      if (response.status === 201) {
+        notifySucess('Cadastro realizado com sucesso!')
+      }
+
     }
+
+    await carregarClientes()
+
     await nextTick()
     closeDrawer()
   } catch (error) {
-
+    console.log('***** ****** response: ', error.data)
     if(error.response.data.status === 400) {
       notifyWarning(error.response.data.mensagem);
     } else {
