@@ -18,13 +18,10 @@ export const useUtilStore = defineStore('utilStore', () => {
     estabelecimentos.value = data
   }
 
-  const popularModulos = (data) => {
-    modulos.value = data
-  }
+  const popularModulos = (data) => modulos.value = data
 
-  const popularVencimentos = (data) => {
-    vencimentos.value = data
-  }
+
+  const popularVencimentos = (data) => vencimentos.value = data
 
   const popularPerfis = (data) => {
     perfis.value = data

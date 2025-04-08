@@ -210,7 +210,6 @@ const documentoMask = computed(() => {
 });
 
 function populateForm(data) {
-  console.log('Dados recebidos em initialData:', data);
 
   const newFormData = {
     tipo: data.tipoPessoa === 'PESSOA JURÍDICA' ? 'PJ' : 'PF',

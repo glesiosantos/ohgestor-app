@@ -77,7 +77,6 @@ import { onMounted, ref, nextTick } from 'vue'
 import { useDrawer } from 'src/composables/useDrawer'
 import ClienteForm from './components/ClienteForm.vue'
 
-// import { useRouter } from 'vue-router'
 import useNotify from 'src/composables/UseNotify'
 import { utilService } from 'src/services/util_service'
 import { clienteService } from './services/cliente_service'

@@ -1,4 +1,4 @@
-const PedidoListPage = import('../CarregarPedidos.vue')
+const PedidoListPage = import('../PedidoListPage.vue')
 
 export default [
   { path: '/pedidos', name: 'pedidos', component: () =>  PedidoListPage}
