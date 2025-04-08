@@ -20,9 +20,13 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE)
   })
 
-  Router.beforeEach(async(to, from, next) => {
-    if(to.meta?.auth){
-      store.isAuth ? next() : next({name: 'sign-in'})
+  Router.beforeEach(async (to, from, next) => {
+    if (to.meta?.auth) {
+      // Rota exige autenticação
+      store.isAuth ? next() : next({ name: 'sign-in' })
+    } else if (to.name === 'sign-in' && store.isAuth) {
+      // Se está autenticado e tenta acessar sign-in, redireciona para dashboard
+      next({ name: 'dashboard' })
     } else {
       next()
     }

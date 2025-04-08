@@ -3,22 +3,22 @@ import { useQuasar } from "quasar";
 export default function useNotify() {
   const $q = useQuasar()
 
-  const notfifySucess = (message) => $q.notify({
+  const notifySucess = (message) => $q.notify({
     type: 'positive',
     message
   })
 
-  const notfifyError = (message) => $q.notify({
+  const notifyError = (message) => $q.notify({
     type: 'negative',
     message: message || 'Failed!'
   })
 
-  const notfifyWarning = (message) => $q.notify({
+  const notifyWarning = (message) => $q.notify({
     type: 'warning',
     message: message || 'Warning!'
   })
 
 
-  return { notfifySucess, notfifyError, notfifyWarning }
+  return { notifySucess, notifyError, notifyWarning }
 
 }

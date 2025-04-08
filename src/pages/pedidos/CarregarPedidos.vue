@@ -52,7 +52,7 @@
 
       <template v-slot:body-cell-opcao="props">
         <q-td :props="props">
-          <q-btn
+          <q-btn v-if="!props.row.situacao"
             color="primary"
             @click="copyPixCode(props.row.payload)"
             round
