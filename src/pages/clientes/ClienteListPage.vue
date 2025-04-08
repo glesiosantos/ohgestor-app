@@ -69,6 +69,7 @@
         />
       </q-scroll-area>
     </q-drawer>
+
   </q-page>
 </template>
 <script setup>
@@ -124,7 +125,12 @@ const pagination = {
 const handleSubmit = async (formData) => {
   try {
     if (isEdit.value) {
-      console.log('', formData)
+      const response = await salvarCliente(formData)
+
+      if (response.status === 201) {
+        notifySucess('Cliente atualizado com sucesso!')
+      }
+
     } else {
       const response = await salvarCliente(formData)
       console.log('***** ****** response: ', response)

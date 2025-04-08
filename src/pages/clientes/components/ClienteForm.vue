@@ -132,7 +132,6 @@
       <div v-for="(contato, index) in form.contatos" :key="index">
         <q-input
           v-model="form.contatos[index]"
-          :disable="isEdit"
           mask="(##) #.####-####"
           :label="index === 0 ? 'Contato Principal' : `Contato ${index + 1}`"
           outlined
@@ -205,10 +204,14 @@ const form = ref({
 const loading = ref(false);
 
 const documentoMask = computed(() => {
-  return form.value.tipo === 'PF' ? '###.###.###-##' : '##.###.###/####-##';
+  const mask = form.value.tipo === 'PF' ? '###.###.###-##' : '##.###.###/####-##';
+  console.log('Máscara aplicada:', mask, 'para tipo:', form.value.tipo);
+  return mask;
 });
 
 function populateForm(data) {
+  console.log('Dados recebidos em initialData:', data);
+
   const newFormData = {
     tipo: data.tipoPessoa === 'PESSOA JURÍDICA' ? 'PJ' : 'PF',
     idCliente: data.idCliente || null,
@@ -225,7 +228,10 @@ function populateForm(data) {
     modulo: data.modulo || '',
     contatos: Array.isArray(data.contatos) && data.contatos.length > 0 ? [...data.contatos] : [''],
   };
-  form.value = { ...form.value, ...newFormData };
+
+  Object.keys(newFormData).forEach((key) => {
+    form.value[key] = newFormData[key];
+  });
 }
 
 function addContact() {
@@ -275,7 +281,9 @@ watch(
     } else if (newVal === 'PJ' && form.value.razao === form.value.fantasia) {
       form.value.razao = '';
     }
-    form.value.documento = '';
+    if (!props.isEdit) {
+      form.value.documento = '';
+    }
   }, 100)
 );
 
