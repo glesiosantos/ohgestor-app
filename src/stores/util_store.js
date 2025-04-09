@@ -9,6 +9,7 @@ export const useUtilStore = defineStore('utilStore', () => {
   const vencimentos = ref([])
   const perfis = ref([])
   const planos = ref([])
+  const gratuitos = ref([])
 
   const popularEstados = (data) => {
     estados.value = data
@@ -27,7 +28,13 @@ export const useUtilStore = defineStore('utilStore', () => {
     perfis.value = data
   }
 
+  const popularGratuito = (data) => {
+    gratuitos.value = data
+  }
+
   const popularPlanos = (data) => planos.value = data
 
-  return { popularEstados, popularEstabelecimentoComerciais, popularModulos, popularVencimentos, popularPerfis, popularPlanos, estados, estabelecimentos, modulos, vencimentos, perfis, planos }
+  return { popularEstados, popularEstabelecimentoComerciais, popularModulos, popularVencimentos, popularPerfis, popularPlanos, popularGratuito,
+    estados, estabelecimentos, modulos, vencimentos, perfis, planos, gratuitos
+  }
 })

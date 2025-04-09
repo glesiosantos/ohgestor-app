@@ -10,5 +10,11 @@ export const pedidoService = () => {
     return response
   }
 
-  return { carregarPedidos }
+  const registrarPedido = async (data) => {
+    console.log('*** *** *** ', data)
+    const response = await api.post('v1/pedidos',data,{ headers: {Authorization: authStore.auth.token}} )
+    return response
+  }
+
+  return { carregarPedidos, registrarPedido }
 }

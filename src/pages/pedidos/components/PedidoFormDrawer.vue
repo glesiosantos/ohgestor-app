@@ -1,5 +1,5 @@
 <template>
-  <q-form @submit="emit('submit', form)" class="q-gutter-y-sm">
+  <q-form ref="formRef" @submit="onSubmit" class="q-gutter-y-sm">
     <q-card-section class="bg-primary">
       <div class="row items-center no-wrap text-white">
         <div class="text-h6">
@@ -26,7 +26,7 @@
         emit-value
         map-options
         lazy-rules
-        :rules="[val => (val && val.length > 0) || 'Cliente é campo obrigatório']"
+        :rules="[val => !!val || 'Cliente é campo obrigatório']"
       >
         <template v-slot:append>
           <q-icon name="search" />
@@ -51,7 +51,10 @@
         mask="###.###.###-##"
         class="col-12 col-md-4 q-mb-md"
         lazy-rules
-        :rules="[val => (val && val.length > 0) || 'CPF é campo obrigatório']"
+        :rules="[
+          val => !!val || 'CPF é campo obrigatório',
+          val => val && val.replace(/\D/g, '').length === 11 || 'CPF informado é inválido'
+        ]"
       />
 
       <q-input
@@ -61,7 +64,7 @@
         :style="{ textTransform: 'uppercase' }"
         class="col-12 col-md-8 q-mb-md"
         lazy-rules
-        :rules="[val => (val && val.length > 0) || 'Nome é campo obrigatório']"
+        :rules="[val => !!val || 'Nome é campo obrigatório']"
       />
 
       <!-- Seleção de módulo -->
@@ -76,7 +79,7 @@
         map-options
         class="q-mb-md"
         lazy-rules
-        :rules="[val => (val && val.length > 0) || 'Módulo é campo obrigatório']"
+        :rules="[val => !!val || 'Módulo é campo obrigatório']"
       />
 
       <!-- Toggle para teste gratuito -->
@@ -99,7 +102,7 @@
           map-options
           class="q-mb-md"
           lazy-rules
-          :rules="[val => (val && val.length > 0) || 'Plano é campo obrigatório']"
+          :rules="[val => !!val || 'Plano é campo obrigatório']"
         />
 
         <div class="col-12 col-md-5 q-gutter-sm q-mb-md">
@@ -123,9 +126,13 @@
         v-model="form.periodoTeste"
         :options="periodosTeste"
         label="Período de Teste"
+        option-label="descricao"
+        option-value="totalDias"
         class="q-mb-md"
+        emit-value
+        map-options
         lazy-rules
-        :rules="[val => (val && val.length > 0) || 'Período de teste é obrigatório']"
+        :rules="[val => val !== null && val !== undefined || 'Período de teste é obrigatório']"
       />
     </q-card-section>
 
@@ -168,12 +175,13 @@ const form = ref({
   periodoTeste: null
 })
 
+const formRef = ref(null) // Referência ao q-form
 const clientesOptions = ref([])
 const loading = ref(false)
 
 const periodosTeste = [
-  '7 dias',
-  '15 dias'
+  { totalDias: 7, descricao: '7 dias' },
+  { totalDias: 15, descricao: '15 dias' }
 ]
 
 // Inicializa o formulário com dados iniciais, se fornecidos
@@ -198,7 +206,7 @@ const todosClientes = computed(() => {
 const buscarCliente = (val, update) => {
   if (!val || val.length < 3) {
     update(() => {
-      clientesOptions.value = todosClientes.value // Mostra todos os clientes se o termo for muito curto
+      clientesOptions.value = todosClientes.value
     })
     return
   }
@@ -210,6 +218,24 @@ const buscarCliente = (val, update) => {
       (cliente.label && cliente.label.toLowerCase().includes(val.toLowerCase()))
     )
   })
+}
+
+// Função para validar e enviar o formulário
+const onSubmit = async () => {
+  try {
+    loading.value = true
+    const isValid = await formRef.value.validate()
+    if (!isValid) {
+      console.log('Formulário inválido:', form.value)
+      return
+    }
+    console.log('Formulário válido, enviando:', form.value)
+    emit('submit', form.value)
+  } catch (error) {
+    console.error('Erro ao validar formulário:', error)
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 

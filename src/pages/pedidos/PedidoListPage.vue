@@ -51,19 +51,21 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useDrawer } from 'src/composables/useDrawer'
-import { useQuasar } from 'quasar'
 import PedidoFormDrawer from './components/PedidoFormDrawer.vue'
 import { utilService } from 'src/services/util_service'
 import { clienteService } from '../clientes/services/cliente_service'
+import { pedidoService } from './services/pedido_service'
+import useNotify from 'src/composables/UseNotify'
 
-const $q = useQuasar()
 const { drawer, openDrawer, closeDrawer, isEdit, currentData } = useDrawer()
+const { notifySucess, notifyError, notifyWarning } = useNotify()
 
 const loading = ref(false)
 const pedidos = ref([])
 
-const { carregarModulos, carregarPlanos, carregarVencimentos } = utilService()
+const { carregarModulos, carregarPlanos, carregarVencimentos, carregarGratuidade } = utilService()
 const { carregarClientes } = clienteService()
+const { registrarPedido } = pedidoService()
 
 const columns = [
   { name: 'id', label: 'ID', field: 'id', sortable: true },
@@ -92,28 +94,24 @@ const handleSubmit = async (formData) => {
     if (isEdit.value) {
       // Lógica para editar pedido (substitua pela sua chamada real)
       console.log('Editando pedido:', formData)
-      // Exemplo: await pedidoService.atualizarPedido(formData)
+
     } else {
-      // Lógica para criar novo pedido (substitua pela sua chamada real)
-      console.log('Criando novo pedido:', formData)
-      // Exemplo: await pedidoService.criarPedido(formData)
+      await registrarPedido(formData)
     }
 
     // Atualiza a lista de pedidos (se necessário)
     pedidos.value = await carregarPedidos() // Assumindo que você tem essa função
-
-    $q.notify({
-      type: 'positive',
-      message: isEdit.value ? 'Pedido atualizado com sucesso!' : 'Pedido criado com sucesso!'
-    })
-
+    notifySucess(isEdit.value ? 'Pedido atualizado com sucesso!' : 'Pedido criado com sucesso!')
     closeDrawer()
   } catch (error) {
     console.error('Erro ao processar o pedido:', error)
-    $q.notify({
-      type: 'negative',
-      message: 'Erro ao salvar o pedido. Tente novamente.'
-    })
+
+    if(error.status === 400) {
+      error.response.data.forEach(error => notifyWarning(error.mensagem))
+    } else {
+      notifyError('Erro ao salvar o pedido. Tente novamente.')
+    }
+
   } finally {
     loading.value = false
   }
@@ -133,14 +131,12 @@ onMounted(async () => {
       carregarModulos(),
       carregarPlanos(),
       carregarVencimentos(),
+      carregarGratuidade(),
       carregarPedidos().then(data => pedidos.value = data)
     ])
   } catch (error) {
     console.error('Erro ao carregar dados iniciais:', error)
-    $q.notify({
-      type: 'negative',
-      message: 'Erro ao carregar os dados. Tente novamente.'
-    })
+    notifyError('Erro ao carregar os dados. Tente novamente.')
   } finally {
     loading.value = false
   }
