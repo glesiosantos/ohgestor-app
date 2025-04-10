@@ -11,26 +11,17 @@ export const useUtilStore = defineStore('utilStore', () => {
   const planos = ref([])
   const gratuitos = ref([])
 
-  const popularEstados = (data) => {
-    estados.value = data
-  }
+  const popularEstados = (data) => estados.value = data
 
-  const popularEstabelecimentoComerciais = (data) => {
-    estabelecimentos.value = data
-  }
+  const popularEstabelecimentoComerciais = (data) => estabelecimentos.value = data
 
   const popularModulos = (data) => modulos.value = data
 
-
   const popularVencimentos = (data) => vencimentos.value = data
 
-  const popularPerfis = (data) => {
-    perfis.value = data
-  }
+  const popularPerfis = (data) => perfis.value = data
 
-  const popularGratuito = (data) => {
-    gratuitos.value = data
-  }
+  const popularGratuito = (data) => gratuitos.value = data
 
   const popularPlanos = (data) => planos.value = data
 

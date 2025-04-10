@@ -1,13 +1,19 @@
 <template>
   <q-page padding>
-    <!-- Lista de pedidos -->
     <q-table
       title="Lista de Pedidos"
-      :rows="pedidos"
+      :rows="pedidoStore.pedidos"
       :columns="columns"
       row-key="id"
       :loading="loading"
     >
+      <template v-slot:body-cell-situacao="props">
+        <q-td :props="props">
+          <q-badge :color="props.row.situacao ? 'orange' : 'grey'">
+            {{ props.row.situacao }}
+          </q-badge>
+        </q-td>
+      </template>
       <template v-slot:body-cell-acoes="props">
         <q-td :props="props">
           <q-btn
@@ -30,7 +36,7 @@
       fab
       icon="add"
       color="primary"
-      class="fixed-bottom-right q-mr-md q-mb-md"
+      class="fab-button"
       @click="openDrawer('add')"
     />
 
@@ -56,32 +62,36 @@ import { utilService } from 'src/services/util_service'
 import { clienteService } from '../clientes/services/cliente_service'
 import { pedidoService } from './services/pedido_service'
 import useNotify from 'src/composables/UseNotify'
+import { usePedidoStore } from 'src/stores/pedido_store'
 
 const { drawer, openDrawer, closeDrawer, isEdit, currentData } = useDrawer()
 const { notifySucess, notifyError, notifyWarning } = useNotify()
+
+const pedidoStore = usePedidoStore()
 
 const loading = ref(false)
 const pedidos = ref([])
 
 const { carregarModulos, carregarPlanos, carregarVencimentos, carregarGratuidade } = utilService()
 const { carregarClientes } = clienteService()
-const { registrarPedido } = pedidoService()
+const { registrarPedido, carregarPedidos } = pedidoService()
 
 const columns = [
-  { name: 'id', label: 'ID', field: 'id', sortable: true },
-  { name: 'cliente', label: 'Cliente', field: 'cliente', sortable: true },
-  { name: 'modulos', label: 'Módulos', field: 'modulos' },
-  { name: 'status', label: 'Status', field: 'status' },
+  { label: 'ID Pedido', field: row => row.idPedido, align: 'center' },
+  { label: 'Cliente', field: row => row.cliente, format: val => `${val}`, sortable: true, align: 'center' },
+  { label: 'Modulo', field: row => row.modulo, format: val => `${val}`, sortable: true, align: 'center' },
+  { label: 'Status', name: 'situacao', field: row => row.situacao, format: val => `${val}`, sortable: true, align: 'center' },
+  { label: 'Plano', field: row => row.plano, format: val => `${val}`, sortable: true, align: 'center' },
   { name: 'acoes', label: 'Ações', field: 'acoes' }
 ]
 
-// Função para editar pedido (exemplo)
+// Função para editar pedido
 const editarPedido = (row) => {
   openDrawer('edit')
   currentData.value = row
 }
 
-// Função para deletar pedido (exemplo)
+// Função para deletar pedido
 const deletarPedido = (row) => {
   console.log('Deletar pedido:', row)
   // Adicione lógica de deleção aqui
@@ -90,37 +100,25 @@ const deletarPedido = (row) => {
 const handleSubmit = async (formData) => {
   try {
     loading.value = true
-
     if (isEdit.value) {
-      // Lógica para editar pedido (substitua pela sua chamada real)
       console.log('Editando pedido:', formData)
-
     } else {
       await registrarPedido(formData)
     }
-
-    // Atualiza a lista de pedidos (se necessário)
-    pedidos.value = await carregarPedidos() // Assumindo que você tem essa função
+    await carregarPedidos()
+    pedidos.value = await carregarPedidos()
     notifySucess(isEdit.value ? 'Pedido atualizado com sucesso!' : 'Pedido criado com sucesso!')
     closeDrawer()
   } catch (error) {
     console.error('Erro ao processar o pedido:', error)
-
-    if(error.status === 400) {
+    if (error.status === 400) {
       error.response.data.forEach(error => notifyWarning(error.mensagem))
     } else {
       notifyError('Erro ao salvar o pedido. Tente novamente.')
     }
-
   } finally {
     loading.value = false
   }
-}
-
-// Função fictícia para carregar pedidos (substitua pela sua lógica real)
-const carregarPedidos = async () => {
-  // Exemplo: return await pedidoService.listarPedidos()
-  return pedidos.value // Placeholder
 }
 
 onMounted(async () => {
@@ -132,7 +130,7 @@ onMounted(async () => {
       carregarPlanos(),
       carregarVencimentos(),
       carregarGratuidade(),
-      carregarPedidos().then(data => pedidos.value = data)
+      carregarPedidos()
     ])
   } catch (error) {
     console.error('Erro ao carregar dados iniciais:', error)
@@ -142,3 +140,28 @@ onMounted(async () => {
   }
 })
 </script>
+
+<style scoped>
+/* Estilo para o botão FAB */
+.fab-button {
+  position: fixed;
+  bottom: 70px; /* Aumentado para ficar acima do rodapé */
+  right: 16px;
+  z-index: 1000; /* Garante que o botão fique acima de outros elementos */
+}
+
+/* Ajuste responsivo para dispositivos móveis */
+@media (max-width: 599px) {
+  .fab-button {
+    bottom: 80px; /* Mais espaço em telas pequenas para evitar o rodapé */
+    right: 16px;
+  }
+}
+
+/* Ajuste adicional para garantir visibilidade em dispositivos com barras de sistema */
+@media (max-height: 600px) {
+  .fab-button {
+    bottom: calc(env(safe-area-inset-bottom) + 80px); /* Respeita o safe area do dispositivo */
+  }
+}
+</style>

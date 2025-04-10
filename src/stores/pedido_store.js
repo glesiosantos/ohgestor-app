@@ -6,7 +6,7 @@ export const usePedidoStore = defineStore('pedidoStore', () => {
   const pedido = ref('')
   const pedidos = ref([])
 
-  const popularPedido = (data) => pedido.value = data
+  const popularPedido = (data) => pedidos.value = data
 
   const carregarPedidos = (data) => pedidos.value = data
 

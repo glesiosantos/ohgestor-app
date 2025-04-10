@@ -82,6 +82,33 @@
         :rules="[val => !!val || 'Módulo é campo obrigatório']"
       />
 
+      <q-select
+        outlined
+        :options="utilStore.planos"
+        option-label="descricao"
+        option-value="sigla"
+        label="Selecione o Plano"
+        v-model="form.plano"
+        emit-value
+        map-options
+        class="q-mb-md"
+        lazy-rules
+        :rules="[val => !!val || 'Plano é campo obrigatório']"
+      />
+
+      <div class="col-12 col-md-5 q-gutter-sm q-mb-md">
+        <span class="block text-thin">Sugestões de Vencimento</span>
+        <div class="flex justify-between">
+          <q-radio
+            v-model="form.vencimento"
+            v-for="vencimento in utilStore.vencimentos"
+            :val="vencimento.descricao"
+            :label="vencimento.dia.toString()"
+            :key="vencimento.descricao"
+          />
+        </div>
+      </div>
+
       <!-- Toggle para teste gratuito -->
       <q-toggle
         v-model="form.testeGratuito"
@@ -89,45 +116,15 @@
         class="q-mb-md"
       />
 
-      <!-- Campos visíveis apenas quando NÃO é teste -->
-      <div v-if="!form.testeGratuito">
-        <q-select
-          outlined
-          :options="utilStore.planos"
-          option-label="descricao"
-          option-value="sigla"
-          label="Selecione o Plano"
-          v-model="form.plano"
-          emit-value
-          map-options
-          class="q-mb-md"
-          lazy-rules
-          :rules="[val => !!val || 'Plano é campo obrigatório']"
-        />
-
-        <div class="col-12 col-md-5 q-gutter-sm q-mb-md">
-          <span class="block text-thin">Sugestões de Vencimento</span>
-          <div class="flex justify-between">
-            <q-radio
-              v-model="form.vencimento"
-              v-for="vencimento in utilStore.vencimentos"
-              :val="vencimento.descricao"
-              :label="vencimento.dia.toString()"
-              :key="vencimento.descricao"
-            />
-          </div>
-        </div>
-      </div>
-
       <!-- Campo visível apenas quando É teste -->
       <q-select
         v-if="form.testeGratuito"
         outlined
         v-model="form.periodoTeste"
-        :options="periodosTeste"
+        :options="utilStore.gratuitos"
         label="Período de Teste"
         option-label="descricao"
-        option-value="totalDias"
+        option-value="sigla"
         class="q-mb-md"
         emit-value
         map-options
@@ -178,11 +175,6 @@ const form = ref({
 const formRef = ref(null) // Referência ao q-form
 const clientesOptions = ref([])
 const loading = ref(false)
-
-const periodosTeste = [
-  { totalDias: 7, descricao: '7 dias' },
-  { totalDias: 15, descricao: '15 dias' }
-]
 
 // Inicializa o formulário com dados iniciais, se fornecidos
 watch(() => props.initialData, (newVal) => {
