@@ -19,15 +19,10 @@
           <q-btn
             flat
             round
-            icon="edit"
-            @click="editarPedido(props.row)"
+            icon="qr_code"
+            @click="detalhePedido(props.row)"
           />
-          <q-btn
-            flat
-            round
-            icon="delete"
-            @click="deletarPedido(props.row)"
-          />
+
         </q-td>
       </template>
     </q-table>
@@ -63,9 +58,11 @@ import { clienteService } from '../clientes/services/cliente_service'
 import { pedidoService } from './services/pedido_service'
 import useNotify from 'src/composables/UseNotify'
 import { usePedidoStore } from 'src/stores/pedido_store'
+import { useRouter } from 'vue-router'
 
 const { drawer, openDrawer, closeDrawer, isEdit, currentData } = useDrawer()
 const { notifySucess, notifyError, notifyWarning } = useNotify()
+const router = useRouter()
 
 const pedidoStore = usePedidoStore()
 
@@ -84,18 +81,6 @@ const columns = [
   { label: 'Plano', field: row => row.plano, format: val => `${val}`, sortable: true, align: 'center' },
   { name: 'acoes', label: 'Ações', field: 'acoes' }
 ]
-
-// Função para editar pedido
-const editarPedido = (row) => {
-  openDrawer('edit')
-  currentData.value = row
-}
-
-// Função para deletar pedido
-const deletarPedido = (row) => {
-  console.log('Deletar pedido:', row)
-  // Adicione lógica de deleção aqui
-}
 
 const handleSubmit = async (formData) => {
   try {
@@ -121,6 +106,10 @@ const handleSubmit = async (formData) => {
   }
 }
 
+const detalhePedido = (pedido) => {
+  router.push({ name: 'detalhe-pedido', params: { id: pedido.idPedido } })
+}
+
 onMounted(async () => {
   try {
     loading.value = true
@@ -133,8 +122,7 @@ onMounted(async () => {
       carregarPedidos()
     ])
   } catch (error) {
-    console.error('Erro ao carregar dados iniciais:', error)
-    notifyError('Erro ao carregar os dados. Tente novamente.')
+    notifyError('Erro ao carregar os dados. Tente novamente. Error: '+error)
   } finally {
     loading.value = false
   }

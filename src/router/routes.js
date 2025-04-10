@@ -1,6 +1,5 @@
 import authRouter from './../pages/auth/router'
 import clienteRouter from './../pages/clientes/router'
-import vendasRouter from './../pages/vendas/router'
 import usuarioRouters from './../pages/usuarios/router'
 import pedidoRouter from './../pages/pedidos/router'
 
@@ -17,7 +16,6 @@ const routes = [
       { path: '', name: 'dashboard', component: () => import('src/pages/dashboard/IndexPage.vue') },
       { path: '/profile', name: 'profile', component: () => import('src/pages/profile/PerfilPage.vue') },
       ...clienteRouter,
-      ...vendasRouter,
       ...usuarioRouters,
       ...pedidoRouter
     ],

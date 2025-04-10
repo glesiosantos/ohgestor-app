@@ -9,7 +9,11 @@ export const pedidoService = () => {
 
   const carregarPedidos = async () => {
     const response = await api.get('v1/pedidos',{ headers: {Authorization: authStore.auth.token}} )
-    console.log('*** *** ', response.data)
+    pedidoStore.carregarPedidos(response.data)
+  }
+
+  const carregarPedidoPeloId = async (data) => {
+    const response = await api.get(`v1/pedidos/${data}`,{ headers: {Authorization: authStore.auth.token}} )
     pedidoStore.popularPedido(response.data)
   }
 
@@ -18,5 +22,5 @@ export const pedidoService = () => {
     return response
   }
 
-  return { carregarPedidos, registrarPedido }
+  return { carregarPedidos, carregarPedidoPeloId, registrarPedido }
 }
