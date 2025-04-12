@@ -113,7 +113,7 @@
 
       <q-checkbox v-model="location" label="Você esta no local do cadastro agora?" class="col-12 q-mb-sm" @blur="obterLocalizacao" />
 
-      <q-select
+      <!-- <q-select
         outlined
         :options="utilStore.modulos"
         option-label="descricao"
@@ -126,7 +126,7 @@
         map-options
         lazy-rules
         :rules="[val => (val && val.length > 0) || 'MÓDULO é campo obrigatório']"
-      />
+      /> -->
 
       <!-- Contatos -->
       <div v-for="(contato, index) in form.contatos" :key="index">
@@ -197,20 +197,17 @@ const form = ref({
   estado: '',
   latitude: '',
   longitude: '',
-  modulo: '',
   contatos: [''],
 });
 
 const loading = ref(false);
 
 const documentoMask = computed(() => {
-  const mask = form.value.tipo === 'PF' ? '###.###.###-##' : '##.###.###/####-##';
-  console.log('Máscara aplicada:', mask, 'para tipo:', form.value.tipo);
+  const mask = form.value.tipo === 'PF' ? '###.###.###-##' : '##.###.###/####-##'
   return mask;
 });
 
 function populateForm(data) {
-  console.log('Dados recebidos em initialData:', data);
 
   const newFormData = {
     tipo: data.tipoPessoa === 'PESSOA JURÍDICA' ? 'PJ' : 'PF',
@@ -225,7 +222,6 @@ function populateForm(data) {
     estado: data.estado || '',
     latitude: data.latitude || '',
     longitude: data.longitude || '',
-    modulo: data.modulo || '',
     contatos: Array.isArray(data.contatos) && data.contatos.length > 0 ? [...data.contatos] : [''],
   };
 

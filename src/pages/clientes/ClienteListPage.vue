@@ -38,6 +38,15 @@
               </q-td>
             </template>
 
+            <template v-slot:body-cell-periodoDeTeste="props">
+              <q-td :props="props">
+                <q-badge :color="props.row.periodoDeTeste ? 'red' : 'grey'">
+                  {{ props.row.periodoDeTeste ? 'SIM' : 'NÃO' }}
+                </q-badge>
+                <!-- <q-icon name="circle" :color="props.row.teste ? 'green-10' : 'red-10'"/> -->
+              </q-td>
+            </template>
+
             <template v-slot:body-cell-actions="props">
               <q-td :props="props" class="q-gutter-x-xs text-center">
                 <!-- <q-btn round dense color="primary text-black" size="md" @click="openDrawer('edit', props.row)" title="Adicionar um Carro">
@@ -77,7 +86,6 @@ import { onMounted, ref, nextTick } from 'vue'
 import { useDrawer } from 'src/composables/useDrawer'
 import ClienteForm from './components/ClienteForm.vue'
 
-// import { useRouter } from 'vue-router'
 import useNotify from 'src/composables/UseNotify'
 import { utilService } from 'src/services/util_service'
 import { clienteService } from './services/cliente_service'
@@ -104,8 +112,9 @@ const columns = [
   { label: 'Razão Social', field: row => row.razao, format: val => `${val}`, align: 'left' },
   { label: 'Nome', name: 'tipo', field: row => row.fantasia, format: val => `${val}`, sortable: true, align: 'left' },
   { label: 'Tipo de Pessoa', name: 'tipo', field: row => row.tipoPessoa, format: val => `${val}`, sortable: true, align: 'left' },
-  { label: 'Módulo', name: 'tipo', field: row => row.modulo, format: val => `${val}`, sortable: true, align: 'left' },
+  { label: 'Módulo', field: row => row.modulo, align: 'center' },
   { label: 'Plano Contrado', name: 'tipo', field: row => row.plano, format: val => `${val}`, sortable: true, align: 'left' },
+  { label: 'Período de Test', name: 'periodoDeTeste', field: row => row.periodoDeTeste, format: val => `${val}`, sortable: true, align: 'center' },
   { label: 'Status do Cliente', name: 'ativo', field: row => row.ativo, format: val => `${val}`, sortable: true, align: 'center' },
   { label: 'Dia do Venc.', name: 'vencimento', field: row => row.vencimento, format: val => `${val}`, sortable: true, align: 'center' },
   { label: 'Integrado', name: 'integrado', field: row => row.integrado, format: val => `${val}`, sortable: true, align: 'center' },

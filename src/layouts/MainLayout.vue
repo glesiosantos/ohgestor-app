@@ -35,7 +35,8 @@
     <q-footer class="small-screen-only">
       <q-tabs>
         <q-route-tab exact replace icon="dashboard" label="Dashboard" :to="{name: 'dashboard'}" />
-        <q-route-tab exact replace icon="payments" label="Vendas" :to="{name: 'minhas-vendas'}"/>
+        <q-route-tab exact replace icon="payments" label="Vender" :to="{name: 'pedidos'}" />
+        <q-route-tab exact replace icon="monetization_on" label="Pedidos" :to="{name: 'minhas-vendas'}"/>
         <q-route-tab exact replace icon="manage_accounts" label="Meu Perfil" :to="{name: 'profile'}"/>
       </q-tabs>
     </q-footer>
