@@ -33,34 +33,28 @@
 </template>
 
 <script setup>
-import { api} from 'boot/axios'
-import useNotify from 'src/composables/UseNotify'
-import { useAuthStore } from 'src/stores/auth_store'
-import { reactive } from 'vue'
-import { useRouter } from 'vue-router';
+import { reactive } from 'vue';
+import { authService } from './services/auth_service'
+import useNotify from 'src/composables/UseNotify';
+import { useRouter } from 'vue-router'
+
+const {notifyError} = useNotify()
+const {login} = authService()
 
 const router = useRouter()
-const {notfifyError, notfifySucess} = useNotify()
-const store = useAuthStore()
 
 let form = reactive({
   email: '',
   senha: ''
 })
 
-const handleForm = () => {
-  api.post('v1/auth/autenticar', form).then( response => {
-    store.setAuth(response.data)
-    form = {
-      email: '',
-      senha: ''
-    }
-    notfifySucess('Login realizado com sucesso')
-    router.push({ name: 'dashboard'})
-  }).catch(error => {
-    router.push({ name: 'sign-in'})
-    if(error.status === 403) notfifyError('Credenciais invalidas!')
-  })
+const handleForm = async () => {
+  try {
+    await login(form)
+    router.push({ name: 'dashboard' })
+  } catch (error) {
+    notifyError(`Acesso negado! Mensagem: ${error.message}`)
+  }
 }
 
 </script>

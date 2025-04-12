@@ -1,30 +1,40 @@
-/* eslint-env serviceworker */
-
-/*
- * This file (which will be your service worker)
- * is picked up by the build system ONLY if
- * quasar.config file > pwa > workboxMode is set to "InjectManifest"
- */
-
 import { clientsClaim } from 'workbox-core'
-import { precacheAndRoute, cleanupOutdatedCaches, createHandlerBoundToURL } from 'workbox-precaching'
+import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute, NavigationRoute } from 'workbox-routing'
+import { NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies'
 
-self.skipWaiting()
+// Permite que o service worker assuma o controle imediatamente
 clientsClaim()
 
-// Use with precache injection
-precacheAndRoute(self.__WB_MANIFEST)
-
+// Limpa caches antigos
 cleanupOutdatedCaches()
 
-// Non-SSR fallbacks to index.html
-// Production SSR fallbacks to offline.html (except for dev)
-if (process.env.MODE !== 'ssr' || process.env.PROD) {
-  registerRoute(
-    new NavigationRoute(
-      createHandlerBoundToURL(process.env.PWA_FALLBACK_HTML),
-      { denylist: [new RegExp(process.env.PWA_SERVICE_WORKER_REGEX), /workbox-(.)*\.js$/] }
-    )
-  )
-}
+// Pré-cache de arquivos estáticos gerados pelo Quasar
+precacheAndRoute(self.__WB_MANIFEST)
+
+// Ignorar requisições para a API
+registerRoute(
+  ({ url }) => url.pathname.startsWith('/api/'),
+  new NetworkFirst({
+    cacheName: 'api',
+    networkTimeoutSeconds: 5
+  })
+)
+
+// Estratégia para navegação (HTML)
+registerRoute(
+  new NavigationRoute(new StaleWhileRevalidate({
+    cacheName: 'pages'
+  }))
+)
+
+// Evento de instalação
+self.addEventListener('install', () => {
+  console.log('Service Worker instalado')
+  self.skipWaiting()
+})
+
+// Evento de ativação
+self.addEventListener('activate', () => {
+  console.log('Service Worker ativado')
+})

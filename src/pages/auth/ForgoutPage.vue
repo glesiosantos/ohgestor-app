@@ -26,8 +26,8 @@
 </template>
 
 <script setup>
-import useNotify from 'src/composables/UseNotify';
-import { authService } from 'src/services/auth_service';
+import useNotify from 'src/composables/UseNotify'
+import { authService } from './services/auth_service'
 import { reactive } from 'vue'
 // import { useRouter } from 'vue-router'
 
