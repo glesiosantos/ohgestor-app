@@ -40,7 +40,7 @@
 
             <template v-slot:body-cell-periodoDeTeste="props">
               <q-td :props="props">
-                <q-badge :color="props.row.periodoDeTeste ? 'orange' : 'grey'">
+                <q-badge :color="props.row.periodoDeTeste ? 'red' : 'grey'">
                   {{ props.row.periodoDeTeste ? 'SIM' : 'NÃO' }}
                 </q-badge>
                 <!-- <q-icon name="circle" :color="props.row.teste ? 'green-10' : 'red-10'"/> -->
@@ -112,7 +112,7 @@ const columns = [
   { label: 'Razão Social', field: row => row.razao, format: val => `${val}`, align: 'left' },
   { label: 'Nome', name: 'tipo', field: row => row.fantasia, format: val => `${val}`, sortable: true, align: 'left' },
   { label: 'Tipo de Pessoa', name: 'tipo', field: row => row.tipoPessoa, format: val => `${val}`, sortable: true, align: 'left' },
-  { label: 'Módulo', name: 'tipo', field: row => row.modulo, format: val => `${val}`, sortable: true, align: 'left' },
+  { label: 'Módulo', field: row => row.modulo, align: 'center' },
   { label: 'Plano Contrado', name: 'tipo', field: row => row.plano, format: val => `${val}`, sortable: true, align: 'left' },
   { label: 'Período de Test', name: 'periodoDeTeste', field: row => row.periodoDeTeste, format: val => `${val}`, sortable: true, align: 'center' },
   { label: 'Status do Cliente', name: 'ativo', field: row => row.ativo, format: val => `${val}`, sortable: true, align: 'center' },

@@ -32,12 +32,11 @@
           map-options
           style="min-width: 150px;"
         />
-        <div class="col-12 col-md-2 col-lg-2 flex justify-between q-gutter-md">
+        <div class="col-12 col-md-2">
           <q-btn
             color="primary"
             label="Filtrar"
             icon="filter_alt"
-            class="full-width"
             @click="aplicarFiltros"
           />
           <q-btn
@@ -45,7 +44,6 @@
             color="grey"
             label="Limpar"
             icon="clear"
-            class="full-width"
             @click="limparFiltros"
           />
         </div>
