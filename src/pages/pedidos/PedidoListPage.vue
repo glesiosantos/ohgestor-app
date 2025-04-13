@@ -65,6 +65,13 @@
           </q-badge>
         </q-td>
       </template>
+
+      <template v-slot:body-cell-teste="props">
+        <q-td :props="props">
+          <q-icon name="bug_report" size="sm" :color="props.row.periodoTeste ? 'orange' : 'grey'"/>
+        </q-td>
+      </template>
+
       <template v-slot:body-cell-acoes="props">
         <q-td :props="props">
           <q-btn
@@ -121,7 +128,6 @@ const { formatarData } = useFormatDate() // Importa o composable
 const pedidoStore = usePedidoStore()
 
 const loading = ref(false)
-const pedidos = ref([])
 
 // Filtros
 const filtroDataInicio = ref('')
@@ -144,6 +150,8 @@ const columns = [
   { label: 'ID Pedido', field: row => row.idPedido, align: 'center' },
   { label: 'Cliente', field: row => row.cliente, format: val => `${val}`, sortable: true, align: 'center' },
   { label: 'Modulo', field: row => row.modulo, format: val => `${val}`, sortable: true, align: 'center' },
+  { label: 'Periodo de Teste', name: 'teste', field: row => row.periodoTeste, format: val => `${val}`, sortable: true, align: 'center' },
+  { label: 'Data Venc. Teste', field: row => formatarData(row.dataExpiracaoTeste), format: val => `${val}`, sortable: true, align: 'center' },
   { label: 'Status', name: 'situacao', field: row => row.situacao, format: val => `${val}`, sortable: true, align: 'center' },
   { label: 'Data do Pedido', field: row => row.dataCriadoEm, format: val => formatarData(val), sortable: true, align: 'center' },
   { label: 'Plano', field: row => row.plano, format: val => `${val}`, sortable: true, align: 'center' },
@@ -197,10 +205,10 @@ const handleSubmit = async (formData) => {
     if (isEdit.value) {
       console.log('Editando pedido:', formData)
     } else {
+      console.log('**** '+ formData)
       await registrarPedido(formData)
     }
-    await carregarPedidos()
-    pedidos.value = await carregarPedidos()
+    carregarPedidosDoDia()
     notifySucess(isEdit.value ? 'Pedido atualizado com sucesso!' : 'Pedido criado com sucesso!')
     closeDrawer()
   } catch (error) {
@@ -216,7 +224,8 @@ const handleSubmit = async (formData) => {
 }
 
 const detalhePedido = (pedido) => {
-  router.push({ name: 'detalhe-pedido', params: { idPedido: pedido.idPedido } })
+  console.log('*** ', pedido.idPedido)
+  router.push({ name: 'detalhe-pedido', params: { id: pedido.idPedido } })
 }
 
 onMounted(async () => {
