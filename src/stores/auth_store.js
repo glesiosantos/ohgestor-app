@@ -28,23 +28,19 @@ export const useAuthStore = defineStore('authStore', () => {
     auth.value = null
     isAuth.value = false
     localStorage.removeItem(AUTH_TOKEN)
-    console.log('Token removido do localStorage')
   }
 
   const checkToken = async () => {
     if (!auth.value?.token) {
-      console.log('Nenhum token encontrado')
       removeAuth()
       return false
     }
     try {
-      console.log('Validando token:', auth.value.token.substring(0, 20) + '...') // Log parcial do token
       const bearerToken = `Bearer ${auth.value.token}`
       const { data } = await api.get('v1/auth/validar-token', {
         headers: { Authorization: bearerToken }
       })
-      console.log('Resposta da validação:', data)
-      return data.valid || true // Ajuste conforme a resposta da API
+      return data.valid || true
     } catch (error) {
       console.error('Erro ao validar token:', error.response?.data || error.message)
       removeAuth()

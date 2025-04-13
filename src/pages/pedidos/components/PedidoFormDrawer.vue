@@ -67,8 +67,8 @@
         :rules="[val => !!val || 'Nome é campo obrigatório']"
       />
 
-      <!-- Seleção de módulo -->
       <q-select
+        v-if="!form.testeGratuito"
         outlined
         :options="utilStore.modulos"
         option-label="descricao"
@@ -81,33 +81,6 @@
         lazy-rules
         :rules="[val => !!val || 'Módulo é campo obrigatório']"
       />
-
-      <q-select
-        outlined
-        :options="utilStore.planos"
-        option-label="descricao"
-        option-value="sigla"
-        label="Selecione o Plano"
-        v-model="form.plano"
-        emit-value
-        map-options
-        class="q-mb-md"
-        lazy-rules
-        :rules="[val => !!val || 'Plano é campo obrigatório']"
-      />
-
-      <div class="col-12 col-md-5 q-gutter-sm q-mb-md">
-        <span class="block text-thin">Sugestões de Vencimento</span>
-        <div class="flex justify-between">
-          <q-radio
-            v-model="form.vencimento"
-            v-for="vencimento in utilStore.vencimentos"
-            :val="vencimento.descricao"
-            :label="vencimento.dia.toString()"
-            :key="vencimento.descricao"
-          />
-        </div>
-      </div>
 
       <!-- Toggle para teste gratuito -->
       <q-toggle
@@ -131,6 +104,36 @@
         lazy-rules
         :rules="[val => val !== null && val !== undefined || 'Período de teste é obrigatório']"
       />
+
+      <q-select
+        v-if="!form.testeGratuito"
+        outlined
+        :options="utilStore.planos"
+        option-label="descricao"
+        option-value="sigla"
+        label="Selecione o Plano"
+        v-model="form.plano"
+        emit-value
+        map-options
+        class="q-mb-md"
+        lazy-rules
+        :rules="[val => !!val || 'Plano é campo obrigatório']"
+      />
+
+      <div class="col-12 col-md-5 q-gutter-sm q-mb-md" v-if="!form.testeGratuito">
+        <span class="block text-thin">Sugestões de Vencimento</span>
+        <div class="flex justify-between">
+          <q-radio
+            v-model="form.vencimento"
+            v-for="vencimento in utilStore.vencimentos"
+            :val="vencimento.descricao"
+            :label="vencimento.dia.toString()"
+            :key="vencimento.descricao"
+          />
+        </div>
+      </div>
+
+
     </q-card-section>
 
     <q-card-section class="footer-fixed q-pa-md text-right">

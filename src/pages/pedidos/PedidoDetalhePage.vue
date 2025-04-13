@@ -5,7 +5,7 @@
       <q-card-section class="bg-primary text-white">
         <div class="row items-center no-wrap">
           <q-icon name="qr_code" size="md" class="q-mr-sm" />
-          <div class="text-h6">Detalhes do Pedido {{ pedidoStore.pedido.idPedido}}</div>
+          <div class="text-h6">Detalhes do Pedido {{ pedidoStore.pedido.idPedido }}</div>
           <q-space />
           <q-btn flat round icon="close" @click="router.push({ name: 'pedidos' })" />
         </div>
@@ -15,6 +15,18 @@
       <q-card-section>
         <div class="text-subtitle1 q-mb-md">Resumo do Pedido</div>
         <q-list dense>
+          <!-- Informações sobre período de teste, se aplicável -->
+          <q-item v-if="pedidoStore.pedido.periodoTeste">
+            <q-item-section>
+              <q-item-label>
+                <q-badge color="blue">Período de Teste</q-badge>
+              </q-item-label>
+              <q-item-label caption>
+                Este pedido está em período de teste. Expira em: {{ formatarData(pedidoStore.pedido.dataExpiracaoTeste) }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+
           <q-item>
             <q-item-section>
               <q-item-label>Cliente</q-item-label>
@@ -40,26 +52,26 @@
                 </q-badge>
               </q-item-label>
             </q-item-section>
-            <q-item-section side>
+            <q-item-section side v-if="!pedidoStore.pedido.periodoTeste">
               <q-item-label>Valor</q-item-label>
               <q-item-label caption>R$ {{ pedidoStore.pedido.valor?.toFixed(2) }}</q-item-label>
             </q-item-section>
           </q-item>
-          <q-item>
+          <q-item v-if="!pedidoStore.pedido.periodoTeste">
             <q-item-section>
               <q-item-label>Data de Criação</q-item-label>
               <q-item-label caption>{{ formatarData(pedidoStore.pedido.dataCriadoEm) }}</q-item-label>
             </q-item-section>
             <q-item-section side>
               <q-item-label>Data de Expiração</q-item-label>
-              <q-item-label caption>{{ formatarData(pedidoStore.pedido.expirationDate) }}</q-item-label>
+              <q-item-label caption>{{ formatarData(pedidoStore.pedido.dataExpiracaoTeste) }}</q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
       </q-card-section>
 
-      <!-- QR Code Pix -->
-      <q-card-section class="flex flex-center">
+      <!-- QR Code Pix (Oculto para período de teste) -->
+      <q-card-section v-if="!pedidoStore.pedido.periodoTeste" class="flex flex-center">
         <div class="text-center">
           <div class="text-subtitle1 q-mb-sm">Pague com Pix</div>
           <q-img :src="imageSrc" style="max-width: 250px;" spinner-color="primary" />

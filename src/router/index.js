@@ -24,10 +24,8 @@ export default defineRouter(function () {
     }
 
     if (to.meta?.auth) {
-      // Rota exige autenticação
       store.isAuth ? next() : next({ name: 'sign-in' })
     } else if (to.name === 'sign-in' && store.isAuth) {
-      // Redireciona para dashboard se já autenticado
       next({ name: 'dashboard' })
     } else {
       next()
