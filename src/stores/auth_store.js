@@ -11,14 +11,12 @@ export const useAuthStore = defineStore('authStore', () => {
   const setAuth = (data) => {
     console.log('setAuth chamado com:', data)
     if (!data?.token) {
-      console.error('Dados de autenticação inválidos:', data)
       return
     }
     auth.value = data
     isAuth.value = true
     try {
       localStorage.setItem(AUTH_TOKEN, JSON.stringify(data))
-      console.log('Token salvo no localStorage:', localStorage.getItem(AUTH_TOKEN))
     } catch (error) {
       console.error('Erro ao salvar no localStorage:', error)
     }

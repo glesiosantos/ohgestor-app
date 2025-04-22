@@ -9,7 +9,6 @@ export const pedidoService = () => {
 
   const carregarPedidos = async () => {
     const response = await api.get('v1/pedidos',{ headers: {Authorization: authStore.auth.token}} )
-    console.log('pedidos ***** **** **** ', response.data)
     pedidoStore.carregarPedidos(response.data)
   }
 
