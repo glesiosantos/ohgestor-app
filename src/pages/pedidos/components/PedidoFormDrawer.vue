@@ -17,7 +17,7 @@
         v-model="form.idCliente"
         use-input
         input-debounce="300"
-        label="Buscar por CPF/CNPJ ou Nome Fantasia/Razão Social"
+        label="Buscar por CPF/CNPJ ou nome"
         :options="clientesOptions"
         @filter="buscarCliente"
         class="q-mb-md"
@@ -82,31 +82,7 @@
         :rules="[val => !!val || 'Módulo é campo obrigatório']"
       />
 
-      <!-- Toggle para teste gratuito -->
-      <q-toggle
-        v-model="form.testeGratuito"
-        label="Teste Gratuito"
-        class="q-mb-md"
-      />
-
-      <!-- Campo visível apenas quando É teste -->
       <q-select
-        v-if="form.testeGratuito"
-        outlined
-        v-model="form.periodoTeste"
-        :options="utilStore.gratuitos"
-        label="Período de Teste"
-        option-label="descricao"
-        option-value="sigla"
-        class="q-mb-md"
-        emit-value
-        map-options
-        lazy-rules
-        :rules="[val => val !== null && val !== undefined || 'Período de teste é obrigatório']"
-      />
-
-      <q-select
-        v-if="!form.testeGratuito"
         outlined
         :options="utilStore.planos"
         option-label="descricao"
@@ -120,7 +96,7 @@
         :rules="[val => !!val || 'Plano é campo obrigatório']"
       />
 
-      <div class="col-12 col-md-5 q-gutter-sm q-mb-md" v-if="!form.testeGratuito">
+      <div class="col-12 col-md-5 q-gutter-sm q-mb-md" v-if="form.plano !== 'TESTE'">
         <span class="block text-thin">Sugestões de Vencimento</span>
         <div class="flex justify-between">
           <q-radio
@@ -170,9 +146,7 @@ const form = ref({
   nomeProprietario: '',
   modulo: '',
   plano: '',
-  vencimento: '',
-  testeGratuito: false,
-  periodoTeste: null
+  vencimento: ''
 })
 
 const formRef = ref(null) // Referência ao q-form

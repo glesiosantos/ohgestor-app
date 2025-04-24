@@ -150,7 +150,6 @@ const columns = [
   { label: 'ID Pedido', field: row => row.idPedido, align: 'center' },
   { label: 'Cliente', field: row => row.cliente, format: val => `${val}`, sortable: true, align: 'center' },
   { label: 'Modulo', field: row => row.modulo, format: val => `${val}`, sortable: true, align: 'center' },
-  { label: 'Periodo de Teste', name: 'teste', field: row => row.periodoTeste, format: val => `${val}`, sortable: true, align: 'center' },
   { label: 'Data Venc. Teste', field: row => formatarData(row.dataExpiracaoTeste), format: val => `${val}`, sortable: true, align: 'center' },
   { label: 'Status', name: 'situacao', field: row => row.situacao, format: val => `${val}`, sortable: true, align: 'center' },
   { label: 'Data do Pedido', field: row => row.dataCriadoEm, format: val => formatarData(val), sortable: true, align: 'center' },

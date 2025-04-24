@@ -12,7 +12,8 @@
     "dev": "quasar dev",
     "build": "quasar build",
     "dev:pwa": "quasar dev -m pwa",
-    "postinstall": "quasar prepare"
+    "postinstall": "quasar prepare",
+    "icons": "icongenie generate -i src/assets/ohGestor_icon_1024x1024.png --skip-trim --theme-color 212121"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
