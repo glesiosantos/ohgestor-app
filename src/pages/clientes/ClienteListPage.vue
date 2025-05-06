@@ -118,7 +118,6 @@ const columns = [
   { label: 'Status do Cliente', name: 'ativo', field: row => row.ativo, format: val => `${val}`, sortable: true, align: 'center' },
   { label: 'Dia do Venc.', name: 'vencimento', field: row => row.diaVencimento, format: val => `${val}`, sortable: true, align: 'center' },
   { label: 'Integrado', name: 'integrado', field: row => row.integrado, format: val => `${val}`, sortable: true, align: 'center' },
-  { label: 'Tipo de Pessoa', name: 'tipo', field: row => row.tipoPessoa, format: val => `${val}`, sortable: true, align: 'left' },
   { label: 'Contatos', name: 'perfil', field: row => `+55${row.contatos[0]}`, format: val => `${val}`, sortable: true, align: 'left' },
   { label: 'Ações', field: 'actions', name: 'actions', align: 'center' }
 ]

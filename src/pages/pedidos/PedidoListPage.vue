@@ -142,7 +142,7 @@ const situacaoOptions = [
 // Pedidos filtrados
 const filteredPedidos = ref(pedidoStore.pedidos)
 
-const { carregarModulos, carregarPlanos, carregarVencimentos, carregarGratuidade } = utilService()
+const { carregarModulos, carregarPlanos, carregarVencimentos } = utilService()
 const { carregarClientes } = clienteService()
 const { registrarPedido, carregarPedidos } = pedidoService()
 
@@ -234,8 +234,7 @@ onMounted(async () => {
       carregarClientes(),
       carregarModulos(),
       carregarPlanos(),
-      carregarVencimentos(),
-      carregarGratuidade()
+      carregarVencimentos()
     ])
     await carregarPedidosDoDia()
   } catch (error) {
