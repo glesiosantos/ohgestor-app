@@ -119,6 +119,8 @@ import { pedidoService } from './services/pedido_service'
 import useNotify from 'src/composables/UseNotify'
 import { usePedidoStore } from 'src/stores/pedido_store'
 import { useRouter } from 'vue-router'
+import { date } from 'quasar'
+import useCurrency from 'src/composables/useCurrency'
 
 const { drawer, openDrawer, closeDrawer, isEdit, currentData } = useDrawer()
 const { notifySucess, notifyError, notifyWarning } = useNotify()
@@ -126,6 +128,8 @@ const router = useRouter()
 const { formatarData } = useFormatDate() // Importa o composable
 
 const pedidoStore = usePedidoStore()
+
+const { formatToBRL } = useCurrency()
 
 const loading = ref(false)
 
@@ -150,9 +154,17 @@ const columns = [
   { label: 'ID Pedido', field: row => row.idPedido, align: 'center' },
   { label: 'Cliente', field: row => row.cliente, format: val => `${val}`, sortable: true, align: 'center' },
   { label: 'Modulo', field: row => row.modulo, format: val => `${val}`, sortable: true, align: 'center' },
+  { label: 'Desconto', field: row => row.descontoPromocional ? 'SIM' : 'NÃO', sortable: true, align: 'center' },
+  { label: 'Valor Contratado', field: row => row.valor, format: val => formatToBRL(val), sortable: true, align: 'center' },
   { label: 'Data Venc. Teste', field: row => formatarData(row.dataExpiracaoTeste), format: val => `${val}`, sortable: true, align: 'center' },
   { label: 'Status', name: 'situacao', field: row => row.situacao, format: val => `${val}`, sortable: true, align: 'center' },
-  { label: 'Data do Pedido', field: row => row.dataCriadoEm, format: val => formatarData(val), sortable: true, align: 'center' },
+  { label: 'Data do Pedido', field: row => row.dataCriadoEm,
+    format: val => {
+        if (!val) return ' - '
+        const parsed = new Date(`${val}T00:00:00`)
+        return isNaN(parsed) ? ' - ' : date.formatDate(parsed, 'DD/MM/YYYY')
+      },
+    sortable: true, align: 'center' },
   { label: 'Plano', field: row => row.plano, format: val => `${val}`, sortable: true, align: 'center' },
   { name: 'acoes', label: 'Ações', field: 'acoes' }
 ]

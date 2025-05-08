@@ -96,7 +96,7 @@ const { drawer, openDrawer,closeDrawer, isEdit, currentData } = useDrawer()
 const { notifyError, notifyWarning, notifySucess } = useNotify()
 const { formatarDocumento } = useFormatarDocumento()
 
-const { carregarEstados, carregarModulos } = utilService()
+const { carregarEstados, carregarModulos, carregarSegmentoDosClientes } = utilService()
 const { salvarCliente, carregarClientes } = clienteService()
 
 
@@ -169,5 +169,6 @@ onMounted(async () => {
   await carregarEstados()
   await carregarModulos()
   await carregarClientes()
+  await carregarSegmentoDosClientes()
 })
 </script>

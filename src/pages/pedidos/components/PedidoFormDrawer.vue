@@ -96,6 +96,8 @@
         :rules="[val => !!val || 'Plano é campo obrigatório']"
       />
 
+      <q-checkbox v-model="form.descontoPromocional" v-if="form.plano === 'BASIC'" label="Aplicar desconto promocional?" class="col-12 q-mb-sm"/>
+
       <div class="col-12 col-md-5 q-gutter-sm q-mb-md" v-if="form.plano !== 'TESTE'">
         <span class="block text-thin">Sugestões de Vencimento</span>
         <div class="flex justify-between">
@@ -146,7 +148,8 @@ const form = ref({
   nomeProprietario: '',
   modulo: '',
   plano: '',
-  vencimento: ''
+  vencimento: '',
+  descontoPromocional: false
 })
 
 const formRef = ref(null) // Referência ao q-form
@@ -207,7 +210,3 @@ const onSubmit = async () => {
   }
 }
 </script>
-
-<style scoped>
-/* Estilos adicionais se necessário */
-</style>

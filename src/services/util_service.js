@@ -48,5 +48,12 @@ export const utilService = () => {
     return response.data
   }
 
-  return { carregarEstados, carregarEstabelecimentoComerciais, carregarModulos, carregarVencimentos, carregarPerfis, carregarPlanos, carregarGratuidade, carregarEnderecoViaCep }
+  const carregarSegmentoDosClientes = async () => {
+    const response = await api.get('/v1/utils/segmentos', {headers: {Authorization: authStore.auth.token}})
+    utilStore.popularSegmentos(response.data)
+  }
+
+  return { carregarEstados, carregarEstabelecimentoComerciais, carregarModulos, carregarVencimentos, carregarPerfis, carregarPlanos,
+    carregarGratuidade, carregarEnderecoViaCep, carregarSegmentoDosClientes
+  }
 }

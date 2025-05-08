@@ -113,20 +113,20 @@
 
       <q-checkbox v-model="location" label="Você esta no local do cadastro agora?" class="col-12 q-mb-sm" @blur="obterLocalizacao" />
 
-      <!-- <q-select
+      <q-select
         outlined
-        :options="utilStore.modulos"
+        :options="utilStore.segmentos"
         option-label="descricao"
         option-value="sigla"
         class="col-12 col-md-4"
         type="text"
-        label="Modulo"
-        v-model="form.modulo"
+        label="Segmento do Cliente"
+        v-model="form.segmento"
         emit-value
         map-options
         lazy-rules
-        :rules="[val => (val && val.length > 0) || 'MÓDULO é campo obrigatório']"
-      /> -->
+        :rules="[val => (val && val.length > 0) || 'SEGMENTO é campo obrigatório']"
+      />
 
       <!-- Contatos -->
       <div v-for="(contato, index) in form.contatos" :key="index">
@@ -197,6 +197,7 @@ const form = ref({
   estado: '',
   latitude: '',
   longitude: '',
+  segmento: '',
   contatos: [''],
 });
 
@@ -220,6 +221,7 @@ function populateForm(data) {
     bairro: data.bairro || '',
     cidade: data.cidade || '',
     estado: data.estado || '',
+    segmento: data.segmento || '',
     latitude: data.latitude || '',
     longitude: data.longitude || '',
     contatos: Array.isArray(data.contatos) && data.contatos.length > 0 ? [...data.contatos] : [''],
