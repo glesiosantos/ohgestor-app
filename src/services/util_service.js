@@ -37,11 +37,23 @@ export const utilService = () => {
     utilStore.popularPlanos(response.data)
   }
 
+  const carregarGratuidade = async () => {
+    const response = await api.get('v1/utils/gratuitos', {headers: {Authorization: authStore.auth.token}})
+    utilStore.popularGratuito(response.data)
+  }
+
   const carregarEnderecoViaCep = async (data) => {
     const cep = data.replaceAll('-','')
     const response = await api.get(`https://viacep.com.br/ws/${cep}/json/`)
     return response.data
   }
 
-  return { carregarEstados, carregarEstabelecimentoComerciais, carregarModulos, carregarVencimentos, carregarPerfis, carregarPlanos, carregarEnderecoViaCep }
+  const carregarSegmentoDosClientes = async () => {
+    const response = await api.get('/v1/utils/segmentos', {headers: {Authorization: authStore.auth.token}})
+    utilStore.popularSegmentos(response.data)
+  }
+
+  return { carregarEstados, carregarEstabelecimentoComerciais, carregarModulos, carregarVencimentos, carregarPerfis, carregarPlanos,
+    carregarGratuidade, carregarEnderecoViaCep, carregarSegmentoDosClientes
+  }
 }
