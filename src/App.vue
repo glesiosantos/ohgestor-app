@@ -23,6 +23,8 @@ if(store.isAuth && store.auth) {
   })()
 }
 
-onMounted(() => store.auth)
+onMounted(() => {store.auth
+                console.log(import.meta.env.VITE_API_URL)
+                })
 
 </script>
