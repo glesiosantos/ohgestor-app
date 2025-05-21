@@ -56,7 +56,7 @@ export default defineConfig((ctx) => {
       env: {
         URL_API:  ctx.dev
         ? 'http://localhost:5000/api/'
-        : 'glesi5459.c44.integrator.host'
+        : 'https://glesi5459.c44.integrator.host'
       },
       // rawDefine: {}
       // ignorePublicFolder: true,
