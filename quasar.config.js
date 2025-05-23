@@ -54,7 +54,7 @@ export default defineConfig((ctx) => {
       // publicPath: '/',
       // analyze: true,
       env: {
-        URL_API: ctx.dev ? 'http://localhost:5000/api/' : 'https://glesi5459.c44.integrator.host'
+        URL_API: ctx.dev ? 'http://localhost:5000/api/' : 'https://api.weboot.com.br'
       },
       // rawDefine: {}
       // ignorePublicFolder: true,
